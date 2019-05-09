@@ -20,6 +20,9 @@ func main() {
 	host := os.Getenv("GO_HOST")
 	port := os.Getenv("GO_PORT")
 
+	// Add health check
+	// TODO: add health check
+
 	// Add prometheus
 	http.Handle("/metrics", promhttp.Handler())
 
