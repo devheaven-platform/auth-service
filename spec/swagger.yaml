@@ -1,0 +1,9 @@
+openapi: 3.0.0
+info:
+  title: Auth
+  description: Auth API for the DevHeaven platform
+  version: 1.0.0
+  contact:
+    name: DevHeaven
+    email: devheavenplatform@gmail.com
+    url: http://devheaven.nl/
