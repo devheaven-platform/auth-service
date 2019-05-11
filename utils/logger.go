@@ -39,10 +39,10 @@ func (l *StructuredLogger) NewLogEntry(r *http.Request) middleware.LogEntry {
 	if r.TLS != nil {
 		scheme = "https"
 	}
-	logFields["http_scheme"] = scheme
-	logFields["http_proto"] = r.Proto
-	logFields["http_method"] = r.Method
-	logFields["remote_addr"] = r.RemoteAddr
+	logFields["scheme"] = scheme
+	logFields["protocol"] = r.Proto
+	logFields["method"] = r.Method
+	logFields["remote"] = r.RemoteAddr
 
 	logFields["uri"] = fmt.Sprintf("%s://%s%s", scheme, r.Host, r.RequestURI)
 
@@ -58,9 +58,9 @@ func (l *StructuredLogger) NewLogEntry(r *http.Request) middleware.LogEntry {
 // length and an response time in ms as parameters.
 func (l *StructuredLoggerEntry) Write(status, bytes int, elapsed time.Duration) {
 	l.Logger = l.Logger.WithFields(logrus.Fields{
-		"response_status":       status,
-		"response_bytes_length": bytes,
-		"response_time_ms":      float64(elapsed.Nanoseconds()) / 1000000.0,
+		"status":  status,
+		"bytes":   bytes,
+		"time_ms": float64(elapsed.Nanoseconds()) / 1000000.0,
 	})
 
 	l.Logger.Infoln("Request processed")
