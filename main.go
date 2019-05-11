@@ -9,6 +9,8 @@ import (
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
 	"github.com/go-chi/render"
+	_ "github.com/jinzhu/gorm/dialects/postgres"
+	_ "github.com/jinzhu/gorm/dialects/sqlite"
 	"github.com/joho/godotenv"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	log "github.com/sirupsen/logrus"
@@ -27,6 +29,14 @@ func main() {
 
 	host := os.Getenv("GO_HOST")
 	port := os.Getenv("GO_PORT")
+
+	db, err := utils.OpenConnection()
+	db.LogMode(false)
+
+	if err != nil {
+		log.WithError(err).Fatal("An error occurred while connecting to the database")
+	}
+	defer db.Close()
 
 	// Create controllers
 	healthController := controllers.CreateHealthController()
