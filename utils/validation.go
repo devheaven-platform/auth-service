@@ -2,10 +2,18 @@ package utils
 
 import (
 	"fmt"
+	"strings"
 
 	validator "gopkg.in/go-playground/validator.v9"
 )
 
+// Validate verifies a given request using validator
+// tags from the go-playground/validator.v9 package.
+// The method takes an interface as parameter.
+// The errors will be returned in the form of a map
+// the key is the field name, the value is the error
+// value. Nil will be returned if the request doesn't
+// contain errors.
 func Validate(request interface{}) map[string]string {
 	validate := validator.New()
 	err := validate.Struct(request)
@@ -14,8 +22,7 @@ func Validate(request interface{}) map[string]string {
 		errs := map[string]string{}
 
 		for _, err := range err.(validator.ValidationErrors) {
-			// TODO: convert field name to lowercase
-			errs[err.StructField()] = formatMessage(err)
+			errs[strings.ToLower(err.StructField())] = formatMessage(err)
 		}
 
 		return errs
@@ -24,6 +31,9 @@ func Validate(request interface{}) map[string]string {
 	return nil
 }
 
+// formatMessage formats a FieldError in a more human
+// readable form. It takes an instance of validator.FieldError
+// as parameter and returns an string as result.
 func formatMessage(err validator.FieldError) string {
 	switch err.Tag() {
 	case "required":

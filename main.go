@@ -4,11 +4,19 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/devheaven-platform/auth-service/controllers"
+	"github.com/devheaven-platform/auth-service/utils"
+	"github.com/go-chi/chi"
+	"github.com/go-chi/chi/middleware"
+	"github.com/go-chi/render"
 	"github.com/joho/godotenv"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	log "github.com/sirupsen/logrus"
 )
 
+// main is invoked by the go compiler and is used
+// to load the environment variables, database
+// connection and the routes for the service.
 func main() {
 	// Load environment
 	err := godotenv.Load()
@@ -20,8 +28,24 @@ func main() {
 	host := os.Getenv("GO_HOST")
 	port := os.Getenv("GO_PORT")
 
-	// Add health check
-	// TODO: add health check
+	// Create controllers
+	healthController := controllers.CreateHealthController()
+
+	// Create main router
+	router := chi.NewRouter()
+
+	// Add middleware
+	router.Use(
+		render.SetContentType(render.ContentTypeJSON),
+		middleware.RealIP,
+		middleware.Recoverer,
+		utils.NewStructuredLogger(log.StandardLogger()),
+	)
+
+	// Add routes
+	router.Route("/", func(r chi.Router) {
+		r.Mount("/health", healthController)
+	})
 
 	// Add prometheus
 	http.Handle("/metrics", promhttp.Handler())
@@ -37,5 +61,5 @@ func main() {
 		"host": host,
 		"port": port,
 	}).Info("Started server")
-	log.Fatal(http.ListenAndServe(host+":"+port, nil))
+	log.Fatal(http.ListenAndServe(host+":"+port, router))
 }
