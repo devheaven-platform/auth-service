@@ -55,9 +55,20 @@ func main() {
 
 	// Add routes
 	router.Route("/", func(r chi.Router) {
+		// General
 		r.Mount("/health", healthController)
 		r.Mount("/metrics", metricsController)
 		r.Mount("/docs", swaggerController)
+
+		// Service
+
+		// Errors
+		r.NotFound(func(res http.ResponseWriter, req *http.Request) {
+			utils.RespondError(res, "Resource not found", 404)
+		})
+		r.MethodNotAllowed(func(res http.ResponseWriter, req *http.Request) {
+			utils.RespondError(res, "Method not allowed", 405)
+		})
 	})
 
 	log.WithFields(log.Fields{

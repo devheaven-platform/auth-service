@@ -25,8 +25,8 @@ func RespondJSON(w http.ResponseWriter, status int, payload interface{}) {
 
 // RespondError is used as a helper function to write
 // an error as api response. It takes an http.ResponseWriter,
-// name, message and status as parameters.
-func RespondError(w http.ResponseWriter, name string, message string, status int) {
+// message and status as parameters.
+func RespondError(w http.ResponseWriter, message string, status int) {
 	RespondJSON(w, status, models.Error{
 		Message: message,
 	})
@@ -34,9 +34,9 @@ func RespondError(w http.ResponseWriter, name string, message string, status int
 
 // RespondValidationError is used as an helper function
 // to write an validation error as api response. It takes
-// an http.ResponseWriter, name, message, status and errors
+// an http.ResponseWriter, message, status and errors
 // map as parameters.
-func RespondValidationError(w http.ResponseWriter, name string, message string, status int, errors map[string]string) {
+func RespondValidationError(w http.ResponseWriter, message string, status int, errors map[string]string) {
 	RespondJSON(w, status, models.Error{
 		Message: message,
 		Errors:  errors,
