@@ -11,7 +11,7 @@ import (
 	"github.com/go-chi/render"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
-	"github.com/joho/godotenv"
+	_ "github.com/joho/godotenv/autoload"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -19,13 +19,7 @@ import (
 // to load the environment variables, database
 // connection and the routes for the service.
 func main() {
-	// Load environment
-	err := godotenv.Load()
-
-	if err != nil {
-		log.WithError(err).Fatal("An error occurred while loading the environment variables")
-	}
-
+	// Environment
 	host := os.Getenv("GO_HOST")
 	port := os.Getenv("GO_PORT")
 

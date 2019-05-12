@@ -16,13 +16,13 @@ RUN go mod download
 COPY . /app
 
 # Build the binary
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -installsuffix cgo -o /app/bin/service
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -installsuffix cgo -o /app/bin/auth-service
 
 # Worker
 FROM scratch
 
 # Copy binary
-COPY --from=builder /app/bin/service /app/bin/service
+COPY --from=builder /app/bin/auth-service /app/bin/auth-service
 
 # Run binary
-ENTRYPOINT ["/app/bin/service"]
+ENTRYPOINT ["/app/bin/auth-service"]
