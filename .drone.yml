@@ -1,0 +1,50 @@
+pipeline:
+  test:
+    image: go
+    commands:
+      - go test
+    when:
+      branch: master
+      event: pull_request
+
+  publish-staging:
+    image: plugins/docker
+    repo: devheavenci/auth-service
+    tags: "${DRONE_COMMIT_SHA:0:8}"
+    secrets: [ docker_username, docker_password ]
+    when:
+      branch: master
+      event: push
+
+  publish-production:
+    image: plugins/docker
+    repo: devheavenci/auth-service
+    tags: "${DRONE_TAG##v}"
+    secrets: [ docker_username, docker_password ]
+    when:
+      event: tag
+
+  deploy-staging:
+    image: quay.io/honestbee/drone-kubernetes
+    namespace: staging
+    deployment: auth-deployment
+    repo: devheavenci/auth-service
+    container: auth
+    tag: "${DRONE_COMMIT_SHA:0:8}"
+    secrets: [ kubernetes_server, kubernetes_token, kubernetes_cert ]
+    when:
+      branch: master
+      event: push
+
+  deploy-production:
+    image: quay.io/honestbee/drone-kubernetes
+    namespace: production
+    deployment: auth-deployment
+    repo: devheavenci/auth-service
+    container: auth
+    tag: "${DRONE_TAG##v}"
+    secrets: [ kubernetes_server, kubernetes_token ]
+    when:
+      event: tag
+
+branches: master
