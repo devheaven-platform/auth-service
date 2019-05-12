@@ -12,7 +12,6 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
 	"github.com/joho/godotenv"
-	"github.com/prometheus/client_golang/prometheus/promhttp"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -40,6 +39,8 @@ func main() {
 
 	// Create controllers
 	healthController := controllers.CreateHealthController()
+	metricsController := controllers.CreateMetricsController()
+	swaggerController := controllers.CreateSwaggerController()
 
 	// Create main router
 	router := chi.NewRouter()
@@ -55,16 +56,8 @@ func main() {
 	// Add routes
 	router.Route("/", func(r chi.Router) {
 		r.Mount("/health", healthController)
-	})
-
-	// Add prometheus
-	http.Handle("/metrics", promhttp.Handler())
-
-	// Add swagger
-	fs := http.FileServer(http.Dir("./dist"))
-	http.Handle("/docs/", http.StripPrefix("/docs/", fs))
-	http.HandleFunc("/docs/swagger.yaml", func(w http.ResponseWriter, r *http.Request) {
-		http.ServeFile(w, r, "./spec/swagger.yaml")
+		r.Mount("/metrics", metricsController)
+		r.Mount("/docs", swaggerController)
 	})
 
 	log.WithFields(log.Fields{
