@@ -1,6 +1,6 @@
 pipeline:
   test:
-    image: go
+    image: golang
     commands:
       - go test
     when:
