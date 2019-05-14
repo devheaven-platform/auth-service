@@ -10,7 +10,7 @@
       "request": "launch",
       "mode": "debug",
       "showLog": true,
-      "program": "${workspaceFolder}/main.go",
+      "program": "${workspaceFolder}/cmd/api/main.go",
       "env": {},
       "args": []
     }

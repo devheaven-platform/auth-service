@@ -2,6 +2,7 @@ pipeline:
   test:
     image: golang
     commands:
+      - go mod download
       - go test ./test/...
     when:
       branch: master
@@ -14,7 +15,7 @@ pipeline:
     secrets: [ docker_username, docker_password ]
     when:
       branch: master
-      event: push
+      event: pull_request
 
   publish-production:
     image: plugins/docker
