@@ -20,8 +20,13 @@ RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -installsuffix cgo -o /app
 # Worker
 FROM scratch
 
-# Copy binary
+# Set working directory
+WORKDIR /app/bin
+
+# Copy binary & swagger
 COPY --from=builder /app/bin/auth-service /app/bin/auth-service
+COPY --from=builder /app/spec /app/bin/spec
+COPY --from=builder /app/dist /app/bin/dist
 
 # Run binary
-ENTRYPOINT ["/app/bin/auth-service"]
+ENTRYPOINT ["./auth-service"]
