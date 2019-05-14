@@ -15,7 +15,7 @@ pipeline:
     secrets: [ docker_username, docker_password ]
     when:
       branch: master
-      event: pull_request
+      event: push
 
   publish-production:
     image: plugins/docker
