@@ -2,6 +2,7 @@ pipeline:
   test:
     image: golang
     commands:
+      - ls
       - go test ./test/...
     when:
       branch: master
