@@ -1,8 +1,11 @@
 # Builder
-FROM golang:1.12.0 as builder
+FROM golang:1.12.5 as builder
 
 # Set working directory
 WORKDIR /app
+
+# Enable go modules
+ENV GO111MODULE=on
 
 # Copy mod & sum files
 COPY go.mod /app/go.mod
