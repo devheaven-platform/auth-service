@@ -1,4 +1,4 @@
-package models
+package domain
 
 // Error represents an API error. An Error always contains
 // a message and an optional errors map if the error is an
