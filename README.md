@@ -1,4 +1,6 @@
 # Auth Service
+[![Build Status](http://drone.devheaven.nl/api/badges/devheaven-platform/auth-service/status.svg)](http://drone.devheaven.nl/devheaven-platform/auth-service)
+
 This repository contains the auth service for the DevHeaven platform.
 
 # Contribution

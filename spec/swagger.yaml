@@ -1,0 +1,88 @@
+openapi: 3.0.0
+info:
+  title: Auth
+  description: Auth API for the DevHeaven platform
+  version: 1.0.0
+  contact:
+    name: DevHeaven
+    email: devheavenplatform@gmail.com
+    url: http://devheaven.nl/
+components:
+  schemas:
+    ApiError:
+      type: object
+      properties:
+        message:
+          type: string
+          description: An message describing the error
+          example: An error occurred
+      required:
+        - message
+    ValidationError:
+      type: object
+      properties:
+        message:
+          type: string
+          description: An message describing the error
+          example: One or more values are invalid
+        errors:
+          type: object
+          description: A map containing a the validation errors
+          additionalProperties:
+            type: string
+          example:
+            field: error
+      required:
+        - message
+  responses:
+    BadRequest:
+      description: BadRequest
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ValidationError'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiError'
+    Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiError'
+    NotFound:
+      description: NotFound
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiError'
+    InternalServerError:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiError'
+paths:
+  /health/:
+    get:
+      operationId: Health
+      summary: Information about the health of the service
+      responses:
+          '200':
+            description: No Content
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    message:
+                      type: string
+                      description: Health check message
+                      example: Service is running
+          '500':
+            $ref: '#/components/responses/InternalServerError'
+      tags:
+      - Health
