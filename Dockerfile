@@ -1,5 +1,5 @@
 # Builder
-FROM golang:1.12.0-alpine3.9 as builder
+FROM golang:1.12.5 as builder
 
 # Set working directory
 WORKDIR /app
@@ -9,7 +9,6 @@ COPY go.mod /app/go.mod
 COPY go.sum /app/go.sum
 
 # Install dependencies
-RUN apk add --no-cache git
 RUN go mod download
 
 # Copy source

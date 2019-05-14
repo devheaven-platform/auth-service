@@ -2,6 +2,7 @@ pipeline:
   test:
     image: golang
     commands:
+      - go mod download
       - go test ./test/...
     when:
       branch: master
