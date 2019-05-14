@@ -15,7 +15,9 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-// CreateRouter is invoked by
+// CreateRouter is invoked by the main.go binary.
+// This function creates the router and connects
+// to the database.
 func CreateRouter() chi.Router {
 	db, err := db.OpenConnection()
 	db.LogMode(false)

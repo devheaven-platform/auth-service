@@ -16,7 +16,7 @@ RUN go mod download
 COPY . /app
 
 # Build the binary
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -installsuffix cgo -o /app/bin/auth-service
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -installsuffix cgo -o /app/bin/auth-service /app/cmd/api/main.go
 
 # Worker
 FROM scratch
