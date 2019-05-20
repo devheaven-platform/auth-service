@@ -92,6 +92,17 @@ components:
           type: string
           description: The date a user was last updated on
           example: "2019-01-01T00:00:00.000Z"
+    Token:
+      type: object
+      properties:
+        token:
+          type: string
+          description: The jwt token
+          example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+        expires:
+          type: string
+          description: The date the token expires
+          example: "2019-01-01T00:00:00.000Z"
   responses:
     BadRequest:
       description: BadRequest
@@ -164,6 +175,46 @@ paths:
           $ref: '#/components/responses/InternalServerError'
       tags:
       - Health
+  /auth/me:
+    get:
+      operationId: Me
+      summary: Current user
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      tags:
+      - Auth
+  /auth/login:
+    post:
+      operationId: Login
+      summary: Login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Token'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      tags:
+      - Auth
   /users/:
     get:
       operationId: GetUsers
@@ -173,7 +224,121 @@ paths:
           description: OK
           content:
             application/json:
-                schema:
+              schema:
+                type: array
+                items:
                   $ref: '#/components/schemas/User'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      tags:
+      - Users
+    post:
+      operationId: CreateUser
+      summary: Create a user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      tags:
+      - Users
+  /users/{id}:
+    get:
+      operationId: GetUserById
+      summary: Returns one user
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+        description: Id of the user to retrieve
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      tags:
+      - Users
+    patch:
+      operationId: UpdateUser
+      summary: Update one user
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+        description: Id of the user to update
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      tags:
+      - Users
+    delete:
+      operationId: DeleteUser
+      summary: Delete one user
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+        description: Id of the user to delete
+      responses:
+        '204':
+          description: No Content
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
       tags:
       - Users
