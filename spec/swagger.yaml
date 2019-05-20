@@ -9,16 +9,7 @@ info:
     url: http://devheaven.nl/
 components:
   schemas:
-    ApiError:
-      type: object
-      properties:
-        message:
-          type: string
-          description: An message describing the error
-          example: An error occurred
-      required:
-        - message
-    ValidationError:
+    APIError:
       type: object
       properties:
         message:
@@ -33,56 +24,156 @@ components:
           example:
             field: error
       required:
-        - message
+      - message
+    Email:
+      type: object
+      properties:
+        email:
+          type: string
+          description: The email value
+          example: "John"
+        createdAt:
+          type: string
+          description: The date a user was created on
+          example: "2019-01-01T00:00:00.000Z"
+        updatedAt:
+          type: string
+          description: The date a user was last updated on
+          example: "2019-01-01T00:00:00.000Z"
+    Role:
+      type: object
+      properties:
+        role:
+          type: string
+          description: The role value
+          example: "John"
+        createdAt:
+          type: string
+          description: The date a user was created on
+          example: "2019-01-01T00:00:00.000Z"
+        updatedAt:
+          type: string
+          description: The date a user was last updated on
+          example: "2019-01-01T00:00:00.000Z"
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The id of the user
+          example: "55417624-c159-4eab-9260-d4679a2e9b31"
+        firstname:
+          type: string
+          description: The firstname of the user
+          example: "John"
+        lastname:
+          type: string
+          description: The lastname of the user
+          example: "Doe"
+        emails:
+          type: array
+          description: A list containing the users emails
+          items:
+            $ref: '#/components/schemas/Email'
+        roles:
+          type: array
+          description: A list containing the users roles
+          items:
+            $ref: '#/components/schemas/Role'
+        enabled:
+          type: bool
+          description: Whether the user is allowed to access to the system
+          example: true
+        createdAt:
+          type: string
+          description: The date a user was created on
+          example: "2019-01-01T00:00:00.000Z"
+        updatedAt:
+          type: string
+          description: The date a user was last updated on
+          example: "2019-01-01T00:00:00.000Z"
   responses:
     BadRequest:
       description: BadRequest
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/ValidationError'
+            $ref: '#/components/schemas/APIError'
     Unauthorized:
       description: Unauthorized
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/ApiError'
+            type: object
+            properties:
+              message:
+                type: string
+                description: An message describing the error
+                example: Your not authorized to access this resource
     Forbidden:
       description: Forbidden
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/ApiError'
+            type: object
+            properties:
+              message:
+                type: string
+                description: An message describing the error
+                example: You have been denied access to this resouce
     NotFound:
       description: NotFound
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/ApiError'
+            type: object
+            properties:
+              message:
+                type: string
+                description: An message describing the error
+                example: Resource not found
     InternalServerError:
       description: Internal Server Error
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/ApiError'
+            type: object
+            properties:
+              message:
+                type: string
+                description: An message describing the error
+                example: An error occurred
 paths:
   /health/:
     get:
       operationId: Health
       summary: Information about the health of the service
       responses:
-          '200':
-            description: No Content
-            content:
-              application/json:
-                schema:
-                  type: object
-                  properties:
-                    message:
-                      type: string
-                      description: Health check message
-                      example: Service is running
-          '500':
-            $ref: '#/components/responses/InternalServerError'
+        '200':
+          description: No Content
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Health check message
+                    example: Service is running
+        '500':
+          $ref: '#/components/responses/InternalServerError'
       tags:
       - Health
+  /users/:
+    get:
+      operationId: GetUsers
+      summary: Returns a list of users
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+                schema:
+                  $ref: '#/components/schemas/User'
+      tags:
+      - Users

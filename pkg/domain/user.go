@@ -16,7 +16,7 @@ type User struct {
 	Emails    []Email   `gorm:"many2many:user_emails" json:"emails"`
 	Roles     []Role    `gorm:"many2many:user_roles" json:"roles"`
 	Password  string    `json:"password,omitempty" `
-	Enabled   bool      `json:"enabled" gorm:"default:true"`
+	Enabled   bool      `gorm:"default:true" json:"enabled"`
 	CreatedAt time.Time `gorm:"type:timestamp" json:"createdAt"`
 	UpdatedAt time.Time `gorm:"type:timestamp" json:"updatedAt"`
 }

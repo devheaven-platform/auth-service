@@ -30,7 +30,7 @@ func (t BaseTransport) RespondJSON(res http.ResponseWriter, status int, payload 
 // an error as api response. It takes an http.ResponseWriter,
 // message and status as parameters.
 func (t BaseTransport) RespondError(res http.ResponseWriter, message string, status int) {
-	t.RespondJSON(res, status, domain.Error{
+	t.RespondJSON(res, status, domain.APIError{
 		Message: message,
 	})
 }
@@ -40,7 +40,7 @@ func (t BaseTransport) RespondError(res http.ResponseWriter, message string, sta
 // an http.ResponseWriter, message, status and errors
 // map as parameters.
 func (t BaseTransport) RespondValidationError(res http.ResponseWriter, message string, status int, errors map[string]string) {
-	t.RespondJSON(res, status, domain.Error{
+	t.RespondJSON(res, status, domain.APIError{
 		Message: message,
 		Errors:  errors,
 	})
