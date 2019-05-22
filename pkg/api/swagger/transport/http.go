@@ -13,8 +13,8 @@ func CreateTransport() *chi.Mux {
 
 	router := chi.NewRouter()
 	router.Handle("/*", http.StripPrefix("/docs/", fs))
-	router.HandleFunc("/swagger.yaml", func(res http.ResponseWriter, req *http.Request) {
-		http.ServeFile(res, req, "./spec/swagger.yaml")
+	router.HandleFunc("/openapi.yaml", func(res http.ResponseWriter, req *http.Request) {
+		http.ServeFile(res, req, "./spec/openapi.yaml")
 	})
 
 	return router

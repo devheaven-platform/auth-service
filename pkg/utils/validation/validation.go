@@ -9,7 +9,7 @@ import (
 
 // Validate verifies a given request using validator
 // tags from the go-playground/validator.v9 package.
-// The method takes an interface as parameter.
+// The function takes an interface as parameter.
 // The errors will be returned in the form of a map
 // the key is the field name, the value is the error
 // value. Nil will be returned if the request doesn't

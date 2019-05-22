@@ -1,0 +1,344 @@
+openapi: 3.0.0
+info:
+  title: Auth
+  description: Auth API for the DevHeaven platform
+  version: 1.0.0
+  contact:
+    name: DevHeaven
+    email: devheavenplatform@gmail.com
+    url: http://devheaven.nl/
+components:
+  schemas:
+    APIError:
+      type: object
+      properties:
+        message:
+          type: string
+          description: An message describing the error
+          example: One or more values are invalid
+        errors:
+          type: object
+          description: A map containing a the validation errors
+          additionalProperties:
+            type: string
+          example:
+            field: error
+      required:
+      - message
+    Email:
+      type: object
+      properties:
+        email:
+          type: string
+          description: The email value
+          example: "John"
+        createdAt:
+          type: string
+          description: The date a user was created on
+          example: "2019-01-01T00:00:00.000Z"
+        updatedAt:
+          type: string
+          description: The date a user was last updated on
+          example: "2019-01-01T00:00:00.000Z"
+    Role:
+      type: object
+      properties:
+        role:
+          type: string
+          description: The role value
+          example: "John"
+        createdAt:
+          type: string
+          description: The date a user was created on
+          example: "2019-01-01T00:00:00.000Z"
+        updatedAt:
+          type: string
+          description: The date a user was last updated on
+          example: "2019-01-01T00:00:00.000Z"
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The id of the user
+          example: "55417624-c159-4eab-9260-d4679a2e9b31"
+        firstname:
+          type: string
+          description: The firstname of the user
+          example: "John"
+        lastname:
+          type: string
+          description: The lastname of the user
+          example: "Doe"
+        emails:
+          type: array
+          description: A list containing the users emails
+          items:
+            $ref: '#/components/schemas/Email'
+        roles:
+          type: array
+          description: A list containing the users roles
+          items:
+            $ref: '#/components/schemas/Role'
+        enabled:
+          type: bool
+          description: Whether the user is allowed to access to the system
+          example: true
+        createdAt:
+          type: string
+          description: The date a user was created on
+          example: "2019-01-01T00:00:00.000Z"
+        updatedAt:
+          type: string
+          description: The date a user was last updated on
+          example: "2019-01-01T00:00:00.000Z"
+    Token:
+      type: object
+      properties:
+        token:
+          type: string
+          description: The jwt token
+          example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+        expires:
+          type: string
+          description: The date the token expires
+          example: "2019-01-01T00:00:00.000Z"
+  responses:
+    BadRequest:
+      description: BadRequest
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/APIError'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: An message describing the error
+                example: Your not authorized to access this resource
+    Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: An message describing the error
+                example: You have been denied access to this resouce
+    NotFound:
+      description: NotFound
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: An message describing the error
+                example: Resource not found
+    InternalServerError:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: An message describing the error
+                example: An error occurred
+paths:
+  /health/:
+    get:
+      operationId: Health
+      summary: Information about the health of the service
+      responses:
+        '200':
+          description: No Content
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Health check message
+                    example: Service is running
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      tags:
+      - Health
+  /auth/me:
+    get:
+      operationId: Me
+      summary: Current user
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      tags:
+      - Auth
+  /auth/login:
+    post:
+      operationId: Login
+      summary: Login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Token'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      tags:
+      - Auth
+  /users/:
+    get:
+      operationId: GetUsers
+      summary: Returns a list of users
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      tags:
+      - Users
+    post:
+      operationId: CreateUser
+      summary: Create a user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      tags:
+      - Users
+  /users/{id}:
+    get:
+      operationId: GetUserById
+      summary: Returns one user
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+        description: Id of the user to retrieve
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      tags:
+      - Users
+    patch:
+      operationId: UpdateUser
+      summary: Update one user
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+        description: Id of the user to update
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      tags:
+      - Users
+    delete:
+      operationId: DeleteUser
+      summary: Delete one user
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+        description: Id of the user to delete
+      responses:
+        '204':
+          description: No Content
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      tags:
+      - Users
