@@ -3,6 +3,9 @@ package api
 import (
 	"net/http"
 
+	authService "github.com/devheaven-platform/auth-service/pkg/api/auth"
+	authPlatform "github.com/devheaven-platform/auth-service/pkg/api/auth/platform"
+	authTransport "github.com/devheaven-platform/auth-service/pkg/api/auth/transport"
 	healthTransport "github.com/devheaven-platform/auth-service/pkg/api/health/transport"
 	metricsTransport "github.com/devheaven-platform/auth-service/pkg/api/metrics/transport"
 	swaggerTransport "github.com/devheaven-platform/auth-service/pkg/api/swagger/transport"
@@ -44,6 +47,7 @@ func CreateRouter() chi.Router {
 		r.Mount("/health", healthTransport.CreateTransport())
 		r.Mount("/metrics", metricsTransport.CreateTransport())
 		r.Mount("/docs", swaggerTransport.CreateTransport())
+		r.Mount("/auth", authTransport.CreateTransport(authService.CreateService(authPlatform.CreatePlatform(db))))
 		r.Mount("/users", usersTransport.CreateTransport(usersService.CreateService(usersPlatform.CreatePlatform(db))))
 
 		r.NotFound(func(res http.ResponseWriter, req *http.Request) {
