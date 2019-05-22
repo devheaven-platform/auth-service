@@ -6,8 +6,9 @@ import (
 	healthTransport "github.com/devheaven-platform/auth-service/pkg/api/health/transport"
 	metricsTransport "github.com/devheaven-platform/auth-service/pkg/api/metrics/transport"
 	swaggerTransport "github.com/devheaven-platform/auth-service/pkg/api/swagger/transport"
-	"github.com/devheaven-platform/auth-service/pkg/api/users/platform/gorm"
-	userTransport "github.com/devheaven-platform/auth-service/pkg/api/users/transport"
+	usersService "github.com/devheaven-platform/auth-service/pkg/api/users"
+	usersPlatform "github.com/devheaven-platform/auth-service/pkg/api/users/platform"
+	usersTransport "github.com/devheaven-platform/auth-service/pkg/api/users/transport"
 	"github.com/devheaven-platform/auth-service/pkg/utils/db"
 	"github.com/devheaven-platform/auth-service/pkg/utils/logging"
 	"github.com/devheaven-platform/auth-service/pkg/utils/transport"
@@ -47,7 +48,7 @@ func CreateRouter() chi.Router {
 		r.Mount("/health", healthTransport.CreateTransport())
 		r.Mount("/metrics", metricsTransport.CreateTransport())
 		r.Mount("/docs", swaggerTransport.CreateTransport())
-		r.Mount("/users", userTransport.CreateTransport(gorm.CreateUserGormPlatform(db)))
+		r.Mount("/users", usersTransport.CreateTransport(usersService.CreateService(usersPlatform.CreatePlatform(db))))
 
 		// Errors
 		r.NotFound(func(res http.ResponseWriter, req *http.Request) {

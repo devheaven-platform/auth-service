@@ -1,41 +1,56 @@
 package transport
 
 import (
-	"log"
 	"net/http"
 
-	"github.com/devheaven-platform/auth-service/pkg/api/users/platform"
+	"github.com/devheaven-platform/auth-service/pkg/api/users"
+	base "github.com/devheaven-platform/auth-service/pkg/utils/transport"
 	"github.com/go-chi/chi"
 )
 
-type userTransport struct {
-	userPlatform platform.UserPlatform
+// TODO: go doc
+type transport struct {
+	base.BaseTransport
+	service users.Service
 }
 
-func CreateTransport(platform platform.UserPlatform) *chi.Mux {
-	// Create the controller
-	transport := &userTransport{
-		userPlatform: platform,
+// TODO: go doc
+func CreateTransport(service users.Service) *chi.Mux {
+	transport := &transport{
+		service: service,
 	}
 
-	// Create routes
 	router := chi.NewRouter()
 	router.Get("/", transport.getAllUsers)
 	router.Get("/{id}", transport.getUserByID)
+	router.Post("/", transport.createUser)
+	router.Patch("/{id}", transport.updateUser)
+	router.Delete("/{id}", transport.deleteUser)
 
-	// Return the router
 	return router
 }
 
-func (platform *userTransport) getAllUsers(res http.ResponseWriter, req *http.Request) {
-	log.Println("Func: GetAllUsers")
-	res.Header().Set("Content-Type", "application/json")
+// TODO: go doc
+func (t *transport) getAllUsers(res http.ResponseWriter, req *http.Request) {
+	t.RespondError(res, "Not Implemented", 501)
 }
 
-func (platform *userTransport) getUserByID(res http.ResponseWriter, req *http.Request) {
-	log.Println("Func: GetUserByID")
+// TODO: go doc
+func (t *transport) getUserByID(res http.ResponseWriter, req *http.Request) {
+	t.RespondError(res, "Not Implemented", 501)
 }
 
-func (platform *userTransport) updateUser(res http.ResponseWriter, req *http.Request) {
-	log.Println("Func: UpdateUser")
+// TODO: go doc
+func (t *transport) createUser(res http.ResponseWriter, req *http.Request) {
+	t.RespondError(res, "Not Implemented", 501)
+}
+
+// TODO: go doc
+func (t *transport) updateUser(res http.ResponseWriter, req *http.Request) {
+	t.RespondError(res, "Not Implemented", 501)
+}
+
+// TODO: go doc
+func (t *transport) deleteUser(res http.ResponseWriter, req *http.Request) {
+	t.RespondError(res, "Not Implemented", 501)
 }
