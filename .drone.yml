@@ -8,6 +8,17 @@ pipeline:
       branch: master
       event: pull_request
 
+  code-analysis:
+    image: ypcloud/sonar-runner
+    host: "https://sonar.devheaven.nl"
+    sources: "./src"
+    language: "go"
+    profile: "Sonar way"
+    secrets: [ sonar_login, sonar_password ]
+    when:
+      branch: master
+      event: pull_request
+
   publish-staging:
     image: plugins/docker
     repo: devheavenci/auth-service
