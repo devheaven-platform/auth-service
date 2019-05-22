@@ -11,7 +11,7 @@ pipeline:
   code-analysis:
     image: ypcloud/sonar-runner
     host: "https://sonar.devheaven.nl"
-    sources: "./src"
+    sources: "./pkg,./cmd"
     language: "go"
     profile: "Sonar way"
     secrets: [ sonar_login, sonar_password ]
