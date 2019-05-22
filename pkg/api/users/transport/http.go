@@ -8,13 +8,16 @@ import (
 	"github.com/go-chi/chi"
 )
 
-// TODO: go doc
+// This object is used to group all the transport
+// functions together.
 type transport struct {
 	base.BaseTransport
 	service users.Service
 }
 
-// TODO: go doc
+// CreateTransport is used to intialize the transport
+// layer. It takes an service as parameter and returns
+// an router object.
 func CreateTransport(service users.Service) *chi.Mux {
 	transport := &transport{
 		service: service,
@@ -30,27 +33,37 @@ func CreateTransport(service users.Service) *chi.Mux {
 	return router
 }
 
-// TODO: go doc
+// getAllUsers is used to retrieve all the users. This function
+// listens on the /users/ endpoint. It takes an ReponseWriter
+// and Request as parameters.
 func (t *transport) getAllUsers(res http.ResponseWriter, req *http.Request) {
 	t.RespondError(res, "Not Implemented", 501)
 }
 
-// TODO: go doc
+// getUserByID is used to retrieve one user. This function
+// listens on the /users/{id} endpoint. It takes an ReponseWriter
+// and Request as parameters.
 func (t *transport) getUserByID(res http.ResponseWriter, req *http.Request) {
 	t.RespondError(res, "Not Implemented", 501)
 }
 
-// TODO: go doc
+// createUser is used to create a new user This function listens on
+// the /users/ endpoint. It takes an ReponseWriter and Request as
+// parameters.
 func (t *transport) createUser(res http.ResponseWriter, req *http.Request) {
 	t.RespondError(res, "Not Implemented", 501)
 }
 
-// TODO: go doc
+// updateUser is used to update a user. This function listens on
+// the /users/{id} endpoint. It takes an ReponseWriter and Request
+// as parameters.
 func (t *transport) updateUser(res http.ResponseWriter, req *http.Request) {
 	t.RespondError(res, "Not Implemented", 501)
 }
 
-// TODO: go doc
+// deleteUser is used to delete a user. This function listens on
+// the /users/{id} endpoint. It takes an ReponseWriter and Request
+// as parameters.
 func (t *transport) deleteUser(res http.ResponseWriter, req *http.Request) {
 	t.RespondError(res, "Not Implemented", 501)
 }

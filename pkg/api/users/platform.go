@@ -4,7 +4,9 @@ import (
 	"github.com/devheaven-platform/auth-service/pkg/domain"
 )
 
-// TODO: go doc
+// Platform represents the platform in the api
+// resource. This interface is used by the service
+// layer to interact with the database.
 type Platform interface {
 	GetAllUsers() ([]*domain.User, error)
 	GetUserByID(id int) (*domain.User, error)

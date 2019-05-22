@@ -30,10 +30,8 @@ func CreateRouter() chi.Router {
 	}
 	defer db.Close()
 
-	// Create main router
 	router := chi.NewRouter()
 
-	// Add middleware
 	router.Use(
 		render.SetContentType(render.ContentTypeJSON),
 		middleware.RealIP,
@@ -41,16 +39,13 @@ func CreateRouter() chi.Router {
 		logging.NewStructuredLogger(log.StandardLogger()),
 	)
 
-	// Add routes
 	transport := transport.BaseTransport{}
 	router.Route("/", func(r chi.Router) {
-		// General
 		r.Mount("/health", healthTransport.CreateTransport())
 		r.Mount("/metrics", metricsTransport.CreateTransport())
 		r.Mount("/docs", swaggerTransport.CreateTransport())
 		r.Mount("/users", usersTransport.CreateTransport(usersService.CreateService(usersPlatform.CreatePlatform(db))))
 
-		// Errors
 		r.NotFound(func(res http.ResponseWriter, req *http.Request) {
 			transport.RespondError(res, "Resource not found", 404)
 		})

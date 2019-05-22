@@ -8,7 +8,11 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-// TODO: go doc
+// User represents an user in the system. The object
+// contains some basic properties such as firstname,
+// lastname, password and enabled. It also contains
+// a list of emails that user has and an list of roles
+// the user has.
 type User struct {
 	ID        uuid.UUID `gorm:"type:uuid;primary_key;" json:"id"`
 	Firstname string    `json:"firstname"`
@@ -21,7 +25,10 @@ type User struct {
 	UpdatedAt time.Time `gorm:"type:timestamp" json:"updatedAt"`
 }
 
-// TODO: go doc
+// BeforeCreate is invoked by Gorm before an user is
+// inserted in the database. This function is used to
+// hash the passowrd of the user. It takes an gorm
+// Scope as parameter and returns an error if one occurred.
 func (user *User) BeforeCreate(scope *gorm.Scope) error {
 	uuid, err := uuid.NewV4()
 	if err != nil {
@@ -37,7 +44,10 @@ func (user *User) BeforeCreate(scope *gorm.Scope) error {
 	return scope.SetColumn("ID", uuid)
 }
 
-// TODO: go doc
+// BeforeUpdate is invoked by Gorm before an user is
+// updated in the database. This function is used to
+// re-hash the password of the user. It takes an gorm
+// Scope as parameter and returns an error if one occurred.
 func (user *User) BeforeUpdate(scope *gorm.Scope) error {
 	hash, err := bcrypt.GenerateFromPassword([]byte(user.Password), 12)
 
