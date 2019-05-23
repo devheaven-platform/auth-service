@@ -243,6 +243,35 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                firstname:
+                  type: string
+                  description: The firstname of the user
+                  example: "John"
+                lastname:
+                  type: string
+                  description: The lastname of the user
+                  example: "Doe"
+                emails:
+                  type: array
+                  description: A list containing the users emails
+                  items:
+                    type: string
+                roles:
+                  type: array
+                  description: A list containing the users roles
+                  items:
+                    type: string
+                password:
+                  type: string
+                  description: The passowrd of the user
+                  example: Test1234
+              required:
+              - firstname
+              - lastname
+              - emails
+              - roles
+              - password
       responses:
         '201':
           description: Created

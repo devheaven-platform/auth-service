@@ -24,7 +24,7 @@ func CreatePlatform(db *gorm.DB) users.Platform {
 }
 
 // GetAllUsers is used to retrieve all the users from
-// the database. It returns an list of users and error
+// the database. It returns an slice of users and error
 // if one occurred.
 func (p *platform) GetAllUsers() ([]domain.User, error) {
 	var users []domain.User
@@ -49,7 +49,10 @@ func (p *platform) GetUserByID(id uuid.UUID) (domain.User, error) {
 // It takes an user as parameter and returns an user and error
 // if one occurred.
 func (p *platform) CreateUser(user domain.User) (domain.User, error) {
-	return domain.User{}, nil
+	if err := p.db.Create(&user).Error; err != nil {
+		return domain.User{}, err
+	}
+	return user, nil
 }
 
 // UpdateUser is used to update a user in the database.

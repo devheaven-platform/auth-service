@@ -17,9 +17,9 @@ type User struct {
 	ID        uuid.UUID `gorm:"type:uuid;primary_key;" json:"id"`
 	Firstname string    `json:"firstname"`
 	Lastname  string    `json:"lastname"`
-	Emails    []Email   `gorm:"many2many:user_emails" json:"emails"`
+	Emails    []Email   `gorm:"many2many:user_emails"`
 	Roles     []Role    `gorm:"many2many:user_roles" json:"roles"`
-	Password  string    `json:"password,omitempty" `
+	Password  string    `json:"-" `
 	Enabled   bool      `gorm:"default:true" json:"enabled"`
 	CreatedAt time.Time `gorm:"type:timestamp" json:"createdAt"`
 	UpdatedAt time.Time `gorm:"type:timestamp" json:"updatedAt"`

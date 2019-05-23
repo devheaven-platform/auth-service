@@ -1,10 +1,12 @@
 package transport
 
 import (
+	"encoding/json"
 	"net/http"
 
 	"github.com/devheaven-platform/auth-service/pkg/api/users"
 	base "github.com/devheaven-platform/auth-service/pkg/utils/transport"
+	"github.com/devheaven-platform/auth-service/pkg/utils/validation"
 	"github.com/go-chi/chi"
 	"github.com/google/uuid"
 	"github.com/jinzhu/gorm"
@@ -81,7 +83,36 @@ func (t *transport) getUserByID(res http.ResponseWriter, req *http.Request) {
 // the /users/ endpoint. It takes an ReponseWriter and Request as
 // parameters.
 func (t *transport) createUser(res http.ResponseWriter, req *http.Request) {
-	t.RespondError(res, "Not Implemented", 501)
+	type request struct {
+		Firstname string   `json:"firstname" validate:"required,min=2,max=20"`
+		Lastname  string   `json:"lastname" validate:"required,min=2,max=20"`
+		Emails    []string `json:"emails" validate:"required,gte=1,dive,email"`
+		Roles     []string `json:"roles" validate:"required,gte=1,dive,oneof=ROLE_USER ROLE_DEVELOPER ROLE_HR ROLE_MANAGER"`
+		Password  string   `json:"password" validate:"required"`
+	}
+
+	data := request{}
+	err := json.NewDecoder(req.Body).Decode(&data)
+
+	if err != nil {
+		t.RespondError(res, "An error occurred while converting the request body", http.StatusUnsupportedMediaType)
+		return
+	}
+
+	errs := validation.Validate(data)
+	if errs != nil {
+		t.RespondValidationError(res, "One or more values are invalid", http.StatusBadRequest, errs)
+		return
+	}
+
+	result, err := t.service.CreateUser(data.Firstname, data.Lastname, data.Emails, data.Roles, data.Password)
+
+	if err != nil {
+		log.WithError(err).Warn("An error occurred while creating the user")
+		t.RespondError(res, "An internal server error occurred", http.StatusInternalServerError)
+	}
+
+	t.RespondJSON(res, http.StatusOK, result)
 }
 
 // updateUser is used to update a user. This function listens on

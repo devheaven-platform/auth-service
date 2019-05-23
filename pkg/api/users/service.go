@@ -23,7 +23,7 @@ func CreateService(platform Platform) Service {
 }
 
 // GetAllUsers is used to retrieve all the users from
-// the database. It returns an list of users and error
+// the database. It returns an slice of users and error
 // if one occurred.
 func (s *Service) GetAllUsers() ([]domain.User, error) {
 	return s.platform.GetAllUsers()
@@ -37,10 +37,31 @@ func (s *Service) GetUserByID(id uuid.UUID) (domain.User, error) {
 }
 
 // CreateUser is used to create a new user in the database.
-// It takes an user as parameter and returns an user and error
-// if one occurred.
-func (s *Service) CreateUser(user domain.User) (domain.User, error) {
-	return domain.User{}, nil
+// It takes an firstname, lastname, slice of emails, slice
+// of roles and password as parameters and returns an user
+// and error if one occurred.
+func (s *Service) CreateUser(firstname string, lastname string, emails []string, roles []string, password string) (domain.User, error) {
+	e := []domain.Email{}
+	for _, email := range emails {
+		e = append(e, domain.Email{
+			Email: email,
+		})
+	}
+
+	r := []domain.Role{}
+	for _, role := range roles {
+		r = append(r, domain.Role{
+			Role: role,
+		})
+	}
+
+	return s.platform.CreateUser(domain.User{
+		Firstname: firstname,
+		Lastname:  lastname,
+		Emails:    e,
+		Roles:     r,
+		Password:  password,
+	})
 }
 
 // UpdateUser is used to update a user in the database.
