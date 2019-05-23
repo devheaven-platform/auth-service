@@ -26,7 +26,11 @@ func CreatePlatform(db *gorm.DB) users.Platform {
 // the database. It returns an list of users and error
 // if one occurred.
 func (p *platform) GetAllUsers() ([]*domain.User, error) {
-	return nil, nil
+	var users []*domain.User
+	if err := p.db.Set("gorm:auto_preload", true).Find(&users).Error; err != nil {
+		return nil, err
+	}
+	return users, nil
 }
 
 // GetUserByID is used to retrieve one user from the

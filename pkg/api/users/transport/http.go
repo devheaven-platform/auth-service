@@ -6,6 +6,7 @@ import (
 	"github.com/devheaven-platform/auth-service/pkg/api/users"
 	base "github.com/devheaven-platform/auth-service/pkg/utils/transport"
 	"github.com/go-chi/chi"
+	log "github.com/sirupsen/logrus"
 )
 
 // This object is used to group all the transport
@@ -37,7 +38,14 @@ func CreateTransport(service users.Service) *chi.Mux {
 // listens on the /users/ endpoint. It takes an ReponseWriter
 // and Request as parameters.
 func (t *transport) getAllUsers(res http.ResponseWriter, req *http.Request) {
-	t.RespondError(res, "Not Implemented", 501)
+	result, err := t.service.GetAllUsers()
+
+	if err != nil {
+		log.WithError(err).Warn("An error occurred while retrieving the users")
+		t.RespondError(res, "InternalServerError", http.StatusInternalServerError)
+	}
+
+	t.RespondJSON(res, http.StatusOK, result)
 }
 
 // getUserByID is used to retrieve one user. This function

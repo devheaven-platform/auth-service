@@ -24,7 +24,7 @@ func CreateService(platform Platform) Service {
 // the database. It returns an list of users and error
 // if one occurred.
 func (s *Service) GetAllUsers() ([]*domain.User, error) {
-	return nil, nil
+	return s.platform.GetAllUsers()
 }
 
 // GetUserByID is used to retrieve one user from the

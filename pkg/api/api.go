@@ -12,27 +12,20 @@ import (
 	usersService "github.com/devheaven-platform/auth-service/pkg/api/users"
 	usersPlatform "github.com/devheaven-platform/auth-service/pkg/api/users/platform"
 	usersTransport "github.com/devheaven-platform/auth-service/pkg/api/users/transport"
-	"github.com/devheaven-platform/auth-service/pkg/utils/db"
 	"github.com/devheaven-platform/auth-service/pkg/utils/logging"
 	"github.com/devheaven-platform/auth-service/pkg/utils/transport"
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
 	"github.com/go-chi/render"
+	"github.com/jinzhu/gorm"
 	log "github.com/sirupsen/logrus"
 )
 
 // CreateRouter is invoked by the main.go binary.
-// This function creates the router and connects
-// to the database.
-func CreateRouter() chi.Router {
-	db, err := db.OpenConnection()
-	db.LogMode(false)
-
-	if err != nil {
-		log.WithError(err).Fatal("An error occurred while connecting to the database")
-	}
-	defer db.Close()
-
+// This function creates the router. It takes an
+// instance of a gorm database as parameter and
+// returns an instance of chi router.
+func CreateRouter(db *gorm.DB) chi.Router {
 	router := chi.NewRouter()
 
 	router.Use(
