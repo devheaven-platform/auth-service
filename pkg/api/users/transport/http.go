@@ -7,6 +7,7 @@ import (
 	base "github.com/devheaven-platform/auth-service/pkg/utils/transport"
 	"github.com/go-chi/chi"
 	"github.com/google/uuid"
+	"github.com/jinzhu/gorm"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -43,7 +44,7 @@ func (t *transport) getAllUsers(res http.ResponseWriter, req *http.Request) {
 
 	if err != nil {
 		log.WithError(err).Warn("An error occurred while retrieving the users")
-		t.RespondError(res, "InternalServerError", http.StatusInternalServerError)
+		t.RespondError(res, "An internal server error occurred", http.StatusInternalServerError)
 		return
 	}
 
@@ -54,14 +55,26 @@ func (t *transport) getAllUsers(res http.ResponseWriter, req *http.Request) {
 // listens on the /users/{id} endpoint. It takes an ReponseWriter
 // and Request as parameters.
 func (t *transport) getUserByID(res http.ResponseWriter, req *http.Request) {
-	_, err := uuid.Parse(chi.URLParam(req, "id"))
+	id, err := uuid.Parse(chi.URLParam(req, "id"))
 
 	if err != nil {
 		t.RespondError(res, "Id is invalid", http.StatusBadRequest)
 		return
 	}
 
-	t.RespondError(res, "Not Implemented", 501)
+	result, err := t.service.GetUserByID(id)
+
+	if err == gorm.ErrRecordNotFound {
+		t.RespondError(res, "User not found", http.StatusNotFound)
+		return
+	}
+
+	if err != nil {
+		log.WithError(err).Warn("An error occurred while retrieving the user")
+		t.RespondError(res, "An internal server error occurred", http.StatusInternalServerError)
+	}
+
+	t.RespondJSON(res, http.StatusOK, result)
 }
 
 // createUser is used to create a new user This function listens on
