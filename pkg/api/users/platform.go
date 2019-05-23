@@ -9,7 +9,7 @@ import (
 // layer to interact with the database.
 type Platform interface {
 	GetAllUsers() ([]*domain.User, error)
-	GetUserByID(id int) (*domain.User, error)
+	GetUserByID(id string) (*domain.User, error)
 	CreateUser(domain.User) (*domain.User, error)
 	UpdateUser(domain.User) (*domain.User, error)
 	DeleteUser(domain.User) (bool, error)

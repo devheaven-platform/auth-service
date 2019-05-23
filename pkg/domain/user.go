@@ -3,7 +3,7 @@ package domain
 import (
 	"time"
 
-	"github.com/gofrs/uuid"
+	"github.com/google/uuid"
 	"github.com/jinzhu/gorm"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -30,7 +30,7 @@ type User struct {
 // hash the passowrd of the user. It takes an gorm
 // Scope as parameter and returns an error if one occurred.
 func (user *User) BeforeCreate(scope *gorm.Scope) error {
-	uuid, err := uuid.NewV4()
+	uuid, err := uuid.NewRandom()
 	if err != nil {
 		return err
 	}

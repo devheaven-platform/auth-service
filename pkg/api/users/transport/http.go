@@ -6,6 +6,7 @@ import (
 	"github.com/devheaven-platform/auth-service/pkg/api/users"
 	base "github.com/devheaven-platform/auth-service/pkg/utils/transport"
 	"github.com/go-chi/chi"
+	"github.com/google/uuid"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -43,6 +44,7 @@ func (t *transport) getAllUsers(res http.ResponseWriter, req *http.Request) {
 	if err != nil {
 		log.WithError(err).Warn("An error occurred while retrieving the users")
 		t.RespondError(res, "InternalServerError", http.StatusInternalServerError)
+		return
 	}
 
 	t.RespondJSON(res, http.StatusOK, result)
@@ -52,6 +54,13 @@ func (t *transport) getAllUsers(res http.ResponseWriter, req *http.Request) {
 // listens on the /users/{id} endpoint. It takes an ReponseWriter
 // and Request as parameters.
 func (t *transport) getUserByID(res http.ResponseWriter, req *http.Request) {
+	_, err := uuid.Parse(chi.URLParam(req, "id"))
+
+	if err != nil {
+		t.RespondError(res, "Id is invalid", http.StatusBadRequest)
+		return
+	}
+
 	t.RespondError(res, "Not Implemented", 501)
 }
 

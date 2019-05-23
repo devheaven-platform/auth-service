@@ -30,7 +30,7 @@ func (s *Service) GetAllUsers() ([]*domain.User, error) {
 // GetUserByID is used to retrieve one user from the
 // the database by his/her id. It takes an id as parameter
 // and returns an user and error if one occurred.
-func (s *Service) GetUserByID(id int) (*domain.User, error) {
+func (s *Service) GetUserByID(id string) (*domain.User, error) {
 	return nil, nil
 }
 

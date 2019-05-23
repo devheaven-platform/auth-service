@@ -36,8 +36,12 @@ func (p *platform) GetAllUsers() ([]*domain.User, error) {
 // GetUserByID is used to retrieve one user from the
 // the database by his/her id. It takes an id as parameter
 // and returns an user and error if one occurred.
-func (p *platform) GetUserByID(id int) (*domain.User, error) {
-	return nil, nil
+func (p *platform) GetUserByID(id string) (*domain.User, error) {
+	var user *domain.User
+	if err := p.db.Set("gorm:auto_preload", true).First(&user, id).Error; err != nil {
+		return nil, err
+	}
+	return user, nil
 }
 
 // CreateUser is used to create a new user in the database.
