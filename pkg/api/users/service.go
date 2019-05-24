@@ -69,7 +69,7 @@ func (s *Service) CreateUser(firstname string, lastname string, emails []string,
 // of roles and password as parameters and returns an user
 // and error if one occurred.
 func (s *Service) UpdateUser(id uuid.UUID, firstname string, lastname string, emails []string, roles []string, password string) (domain.User, error) {
-	user, err := s.GetUserByID(id)
+	user, err := s.platform.GetUserByID(id)
 	if err != nil {
 		return domain.User{}, err
 	}
@@ -100,6 +100,11 @@ func (s *Service) UpdateUser(id uuid.UUID, firstname string, lastname string, em
 // DeleteUser is used to delete a user from the database.
 // It takes an user as parameter and returns an user and error
 // if one occurred.
-func (s *Service) DeleteUser(user domain.User) (bool, error) {
-	return false, nil
+func (s *Service) DeleteUser(id uuid.UUID) (bool, error) {
+	user, err := s.platform.GetUserByID(id)
+	if err != nil {
+		return false, err
+	}
+
+	return s.platform.DeleteUser(user)
 }

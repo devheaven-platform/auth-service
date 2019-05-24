@@ -159,5 +159,22 @@ func (t *transport) updateUser(res http.ResponseWriter, req *http.Request) {
 // the /users/{id} endpoint. It takes an ReponseWriter and Request
 // as parameters.
 func (t *transport) deleteUser(res http.ResponseWriter, req *http.Request) {
-	t.RespondError(res, "Not Implemented", 501)
+	id, err := uuid.Parse(chi.URLParam(req, "id"))
+	if err != nil {
+		t.RespondError(res, "Id is invalid", http.StatusBadRequest)
+		return
+	}
+
+	result, err := t.service.DeleteUser(id)
+	if err == gorm.ErrRecordNotFound {
+		t.RespondError(res, "User not found", http.StatusNotFound)
+		return
+	}
+	if err != nil || result != true {
+		log.WithError(err).Warn("An error occurred while deleting the user")
+		t.RespondError(res, "An internal server error occurred", http.StatusInternalServerError)
+		return
+	}
+
+	res.WriteHeader(http.StatusNoContent)
 }

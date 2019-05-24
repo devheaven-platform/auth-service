@@ -14,5 +14,5 @@ type Platform interface {
 	GetUserByID(id uuid.UUID) (domain.User, error)
 	CreateUser(user domain.User) (domain.User, error)
 	UpdateUser(user domain.User, update domain.User) (domain.User, error)
-	DeleteUser(domain.User) (bool, error)
+	DeleteUser(user domain.User) (bool, error)
 }

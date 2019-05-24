@@ -69,5 +69,8 @@ func (p *platform) UpdateUser(user domain.User, update domain.User) (domain.User
 // It takes an user as parameter and returns an user and error
 // if one occurred.
 func (p *platform) DeleteUser(user domain.User) (bool, error) {
-	return false, nil
+	if err := p.db.Delete(user).Error; err != nil {
+		return false, err
+	}
+	return true, nil
 }
