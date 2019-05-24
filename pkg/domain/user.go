@@ -10,7 +10,7 @@ import (
 
 // User represents an user in the system. The object
 // contains some basic properties such as firstname,
-// lastname, password and enabled. It also contains
+// lastname, password. It also contains
 // a list of emails that user has and an list of roles
 // the user has.
 type User struct {
@@ -20,7 +20,6 @@ type User struct {
 	Emails    []Email   `gorm:"many2many:user_emails"`
 	Roles     []Role    `gorm:"many2many:user_roles" json:"roles"`
 	Password  string    `json:"-" `
-	Enabled   bool      `gorm:"default:true" json:"enabled"`
 	CreatedAt time.Time `gorm:"type:timestamp" json:"createdAt"`
 	UpdatedAt time.Time `gorm:"type:timestamp" json:"updatedAt"`
 }

@@ -9,6 +9,7 @@ require (
 	github.com/go-chi/render v1.0.1
 	github.com/go-playground/locales v0.12.1 // indirect
 	github.com/go-playground/universal-translator v0.16.0 // indirect
+	github.com/gofrs/uuid v3.2.0+incompatible
 	github.com/google/uuid v1.1.1
 	github.com/jinzhu/gorm v1.9.8
 	github.com/joho/godotenv v1.3.0

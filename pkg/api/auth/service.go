@@ -2,6 +2,7 @@ package auth
 
 import (
 	"github.com/devheaven-platform/auth-service/pkg/domain"
+	"github.com/google/uuid"
 )
 
 // Service represents the service object in the api
@@ -24,7 +25,7 @@ func CreateService(platform Platform) Service {
 // the database. It takes an user id as parameter
 // and returns an user object and error if one
 // occurred.
-func (s *Service) Me(id string) ([]*domain.User, error) {
+func (s *Service) Me(id uuid.UUID) ([]*domain.User, error) {
 	return nil, nil
 }
 

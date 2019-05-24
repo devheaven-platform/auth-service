@@ -85,10 +85,6 @@ components:
           description: A list containing the users roles
           items:
             $ref: '#/components/schemas/Role'
-        enabled:
-          type: bool
-          description: Whether the user is allowed to access to the system
-          example: true
         createdAt:
           type: string
           description: The date a user was created on
