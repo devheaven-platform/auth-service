@@ -43,7 +43,6 @@ func CreateTransport(service users.Service) *chi.Mux {
 // and Request as parameters.
 func (t *transport) getAllUsers(res http.ResponseWriter, req *http.Request) {
 	result, err := t.service.GetAllUsers()
-
 	if err != nil {
 		log.WithError(err).Warn("An error occurred while retrieving the users")
 		t.RespondError(res, "An internal server error occurred", http.StatusInternalServerError)
@@ -58,19 +57,16 @@ func (t *transport) getAllUsers(res http.ResponseWriter, req *http.Request) {
 // and Request as parameters.
 func (t *transport) getUserByID(res http.ResponseWriter, req *http.Request) {
 	id, err := uuid.Parse(chi.URLParam(req, "id"))
-
 	if err != nil {
 		t.RespondError(res, "Id is invalid", http.StatusBadRequest)
 		return
 	}
 
 	result, err := t.service.GetUserByID(id)
-
 	if err == gorm.ErrRecordNotFound {
 		t.RespondError(res, "User not found", http.StatusNotFound)
 		return
 	}
-
 	if err != nil {
 		log.WithError(err).Warn("An error occurred while retrieving the user")
 		t.RespondError(res, "An internal server error occurred", http.StatusInternalServerError)
@@ -93,7 +89,6 @@ func (t *transport) createUser(res http.ResponseWriter, req *http.Request) {
 
 	data := request{}
 	err := json.NewDecoder(req.Body).Decode(&data)
-
 	if err != nil {
 		t.RespondError(res, "An error occurred while converting the request body", http.StatusUnsupportedMediaType)
 		return
@@ -106,20 +101,58 @@ func (t *transport) createUser(res http.ResponseWriter, req *http.Request) {
 	}
 
 	result, err := t.service.CreateUser(data.Firstname, data.Lastname, data.Emails, data.Roles, data.Password)
-
 	if err != nil {
 		log.WithError(err).Warn("An error occurred while creating the user")
 		t.RespondError(res, "An internal server error occurred", http.StatusInternalServerError)
+		return
 	}
 
-	t.RespondJSON(res, http.StatusOK, result)
+	t.RespondJSON(res, http.StatusCreated, result)
 }
 
 // updateUser is used to update a user. This function listens on
 // the /users/{id} endpoint. It takes an ReponseWriter and Request
 // as parameters.
 func (t *transport) updateUser(res http.ResponseWriter, req *http.Request) {
-	t.RespondError(res, "Not Implemented", 501)
+	type request struct {
+		Firstname string   `json:"firstname" validate:"omitempty,min=2,max=20"`
+		Lastname  string   `json:"lastname" validate:"omitempty,min=2,max=20"`
+		Emails    []string `json:"emails" validate:"omitempty,gte=1,dive,email"`
+		Roles     []string `json:"roles" validate:"omitempty,gte=1,dive,oneof=ROLE_USER ROLE_DEVELOPER ROLE_HR ROLE_MANAGER"`
+		Password  string   `json:"password" validate:"omitempty"`
+	}
+
+	data := request{}
+	err := json.NewDecoder(req.Body).Decode(&data)
+	if err != nil {
+		t.RespondError(res, "An error occurred while converting the request body", http.StatusUnsupportedMediaType)
+		return
+	}
+
+	id, err := uuid.Parse(chi.URLParam(req, "id"))
+	if err != nil {
+		t.RespondError(res, "Id is invalid", http.StatusBadRequest)
+		return
+	}
+
+	errs := validation.Validate(data)
+	if errs != nil {
+		t.RespondValidationError(res, "One or more values are invalid", http.StatusBadRequest, errs)
+		return
+	}
+
+	result, err := t.service.UpdateUser(id, data.Firstname, data.Lastname, data.Emails, data.Roles, data.Password)
+	if err == gorm.ErrRecordNotFound {
+		t.RespondError(res, "User not found", http.StatusNotFound)
+		return
+	}
+	if err != nil {
+		log.WithError(err).Warn("An error occurred while updating the user")
+		t.RespondError(res, "An internal server error occurred", http.StatusInternalServerError)
+		return
+	}
+
+	t.RespondJSON(res, http.StatusOK, result)
 }
 
 // deleteUser is used to delete a user. This function listens on

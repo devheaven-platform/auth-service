@@ -12,7 +12,7 @@ import (
 type Platform interface {
 	GetAllUsers() ([]domain.User, error)
 	GetUserByID(id uuid.UUID) (domain.User, error)
-	CreateUser(domain.User) (domain.User, error)
-	UpdateUser(domain.User) (domain.User, error)
+	CreateUser(user domain.User) (domain.User, error)
+	UpdateUser(user domain.User, update domain.User) (domain.User, error)
 	DeleteUser(domain.User) (bool, error)
 }

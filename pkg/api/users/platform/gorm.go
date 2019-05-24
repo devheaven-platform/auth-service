@@ -58,8 +58,11 @@ func (p *platform) CreateUser(user domain.User) (domain.User, error) {
 // UpdateUser is used to update a user in the database.
 // It takes an user as parameter and returns an user and error
 // if one occurred.
-func (p *platform) UpdateUser(user domain.User) (domain.User, error) {
-	return domain.User{}, nil
+func (p *platform) UpdateUser(user domain.User, update domain.User) (domain.User, error) {
+	if err := p.db.Model(&user).Updates(update).Error; err != nil {
+		return domain.User{}, err
+	}
+	return user, nil
 }
 
 // DeleteUser is used to delete a user from the database.

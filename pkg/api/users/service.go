@@ -65,10 +65,36 @@ func (s *Service) CreateUser(firstname string, lastname string, emails []string,
 }
 
 // UpdateUser is used to update a user in the database.
-// It takes an user as parameter and returns an user and error
-// if one occurred.
-func (s *Service) UpdateUser(user domain.User) (domain.User, error) {
-	return domain.User{}, nil
+// It takes an firstname, lastname, slice of emails, slice
+// of roles and password as parameters and returns an user
+// and error if one occurred.
+func (s *Service) UpdateUser(id uuid.UUID, firstname string, lastname string, emails []string, roles []string, password string) (domain.User, error) {
+	user, err := s.GetUserByID(id)
+	if err != nil {
+		return domain.User{}, err
+	}
+
+	e := []domain.Email{}
+	for _, email := range emails {
+		e = append(e, domain.Email{
+			Email: email,
+		})
+	}
+
+	r := []domain.Role{}
+	for _, role := range roles {
+		r = append(r, domain.Role{
+			Role: role,
+		})
+	}
+
+	return s.platform.UpdateUser(user, domain.User{
+		Firstname: firstname,
+		Lastname:  lastname,
+		Emails:    e,
+		Roles:     r,
+		Password:  password,
+	})
 }
 
 // DeleteUser is used to delete a user from the database.
