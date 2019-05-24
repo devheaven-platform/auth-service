@@ -2,6 +2,7 @@ package api
 
 import (
 	"net/http"
+	"os"
 
 	authService "github.com/devheaven-platform/auth-service/pkg/api/auth"
 	authPlatform "github.com/devheaven-platform/auth-service/pkg/api/auth/platform"
@@ -16,6 +17,7 @@ import (
 	"github.com/devheaven-platform/auth-service/pkg/utils/transport"
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
+	"github.com/go-chi/jwtauth"
 	"github.com/go-chi/render"
 	"github.com/jinzhu/gorm"
 	log "github.com/sirupsen/logrus"
@@ -26,6 +28,8 @@ import (
 // instance of a gorm database as parameter and
 // returns an instance of chi router.
 func CreateRouter(db *gorm.DB) chi.Router {
+	auth := jwtauth.New("HS256", []byte(os.Getenv("SECRET")), nil)
+
 	router := chi.NewRouter()
 
 	router.Use(
@@ -33,6 +37,7 @@ func CreateRouter(db *gorm.DB) chi.Router {
 		middleware.RealIP,
 		middleware.Recoverer,
 		logging.NewStructuredLogger(log.StandardLogger()),
+		jwtauth.Verifier(auth),
 	)
 
 	transport := transport.BaseTransport{}

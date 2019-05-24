@@ -31,7 +31,7 @@ components:
         email:
           type: string
           description: The email value
-          example: "John"
+          example: "johndoe@email.com"
         createdAt:
           type: string
           description: The date a user was created on
@@ -46,7 +46,7 @@ components:
         role:
           type: string
           description: The role value
-          example: "John"
+          example: "ROLE_USER"
         createdAt:
           type: string
           description: The date a user was created on

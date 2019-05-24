@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/devheaven-platform/auth-service/pkg/api/users"
+	"github.com/devheaven-platform/auth-service/pkg/utils/middleware"
 	base "github.com/devheaven-platform/auth-service/pkg/utils/transport"
 	"github.com/devheaven-platform/auth-service/pkg/utils/validation"
 	"github.com/go-chi/chi"
@@ -29,11 +30,14 @@ func CreateTransport(service users.Service) *chi.Mux {
 	}
 
 	router := chi.NewRouter()
-	router.Get("/", transport.getAllUsers)
-	router.Get("/{id}", transport.getUserByID)
-	router.Post("/", transport.createUser)
-	router.Patch("/{id}", transport.updateUser)
-	router.Delete("/{id}", transport.deleteUser)
+	router.Group(func(router chi.Router) {
+		router.Use(middleware.Authenticator)
+		router.Get("/", transport.getAllUsers)
+		router.Get("/{id}", transport.getUserByID)
+		router.Post("/", transport.createUser)
+		router.Patch("/{id}", transport.updateUser)
+		router.Delete("/{id}", transport.deleteUser)
+	})
 
 	return router
 }
