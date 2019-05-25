@@ -162,7 +162,7 @@ paths:
       summary: Information about the health of the service
       responses:
         '200':
-          description: No Content
+          description: OK
           content:
             application/json:
               schema:
@@ -205,9 +205,18 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                email:
+                  type: string
+                  description: The email of the user
+                  example: user@devheaven.nl
+                password:
+                  type: string
+                  description: The password of the user
+                  example: Test1234
       responses:
         '200':
-          description: Created
+          description: OK
           content:
             application/json:
               schema:

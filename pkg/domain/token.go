@@ -4,6 +4,6 @@ package domain
 // object contains the token and de expire date of the
 // token.
 type Token struct {
-	Token   string  `json:"token"`
-	Expires float64 `json:"expires"`
+	Token   string `json:"token"`
+	Expires int64  `json:"expires"`
 }

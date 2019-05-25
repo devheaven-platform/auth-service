@@ -10,4 +10,5 @@ import (
 // layer to interact with the database.
 type Platform interface {
 	Me(id uuid.UUID) (domain.User, error)
+	GetByEmail(email string) (domain.User, error)
 }

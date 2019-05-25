@@ -17,7 +17,7 @@ type User struct {
 	ID        uuid.UUID `gorm:"type:uuid;primary_key;" json:"id"`
 	Firstname string    `json:"firstname"`
 	Lastname  string    `json:"lastname"`
-	Emails    []Email   `gorm:"many2many:user_emails"`
+	Emails    []Email   `json:"emails"`
 	Roles     []Role    `gorm:"many2many:user_roles" json:"roles"`
 	Password  string    `json:"-" `
 	CreatedAt time.Time `gorm:"type:timestamp" json:"createdAt"`

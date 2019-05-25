@@ -28,7 +28,7 @@ import (
 // instance of a gorm database as parameter and
 // returns an instance of chi router.
 func CreateRouter(db *gorm.DB) chi.Router {
-	auth := jwtauth.New("HS256", []byte(os.Getenv("SECRET")), nil)
+	auth := jwtauth.New("HS256", []byte(os.Getenv("JWT_SECRET")), nil)
 
 	router := chi.NewRouter()
 
@@ -45,7 +45,7 @@ func CreateRouter(db *gorm.DB) chi.Router {
 		r.Mount("/health", healthTransport.CreateTransport())
 		r.Mount("/metrics", metricsTransport.CreateTransport())
 		r.Mount("/docs", swaggerTransport.CreateTransport())
-		r.Mount("/auth", authTransport.CreateTransport(authService.CreateService(authPlatform.CreatePlatform(db))))
+		r.Mount("/auth", authTransport.CreateTransport(authService.CreateService(authPlatform.CreatePlatform(db), auth)))
 		r.Mount("/users", usersTransport.CreateTransport(usersService.CreateService(usersPlatform.CreatePlatform(db))))
 
 		r.NotFound(func(res http.ResponseWriter, req *http.Request) {
