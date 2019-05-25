@@ -15,7 +15,10 @@
       "env": {
         "GO_ENV": "development",
         "GO_HOST": "localhost",
-        "GO_PORT": 8080
+        "GO_PORT": 8080,
+        "JWT_ISSUER": "DevHeaven",
+        "JWT_EXPIRES": 24,
+        "JWT_SECRET": "secret"
       },
       "args": []
     }
