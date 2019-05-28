@@ -32,10 +32,10 @@ func CreateTransport(service auth.Service) *chi.Mux {
 	router := chi.NewRouter()
 	router.Group(func(router chi.Router) {
 		router.Use(middleware.Authenticator)
-		router.Get("/me", transport.me)
+		router.Get("/me/", transport.me)
 	})
 	router.Group(func(router chi.Router) {
-		router.Post("/login", transport.login)
+		router.Post("/login/", transport.login)
 	})
 
 	return router
