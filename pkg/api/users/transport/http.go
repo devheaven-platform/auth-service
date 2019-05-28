@@ -174,7 +174,7 @@ func (t *transport) deleteUser(res http.ResponseWriter, req *http.Request) {
 		t.RespondError(res, "User not found", http.StatusNotFound)
 		return
 	}
-	if err != nil || result != true {
+	if err != nil || !result {
 		log.WithError(err).Warn("An error occurred while deleting the user")
 		t.RespondError(res, "An internal server error occurred", http.StatusInternalServerError)
 		return
