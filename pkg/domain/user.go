@@ -19,7 +19,7 @@ type User struct {
 	Lastname  string    `json:"lastname"`
 	Emails    []Email   `json:"emails"`
 	Roles     []Role    `gorm:"many2many:user_roles" json:"roles"`
-	Password  string    `json:"-" `
+	Password  string    `json:"-"`
 	CreatedAt time.Time `gorm:"type:timestamp" json:"createdAt"`
 	UpdatedAt time.Time `gorm:"type:timestamp" json:"updatedAt"`
 }
