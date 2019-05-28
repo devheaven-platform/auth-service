@@ -65,10 +65,10 @@ func (s *Service) CreateUser(firstname string, lastname string, emails []string,
 }
 
 // UpdateUser is used to update a user in the database.
-// It takes an firstname, lastname, slice of emails, slice
-// of roles and password as parameters and returns an user
-// and error if one occurred.
-func (s *Service) UpdateUser(id uuid.UUID, firstname string, lastname string, emails []string, roles []string, password string) (domain.User, error) {
+// It takes an slice of emails, slice of roles and
+// password as parameters and returns an user and error
+// if one occurred.
+func (s *Service) UpdateUser(id uuid.UUID, emails []string, roles []string, password string) (domain.User, error) {
 	user, err := s.platform.GetUserByID(id)
 	if err != nil {
 		return domain.User{}, err
@@ -89,11 +89,9 @@ func (s *Service) UpdateUser(id uuid.UUID, firstname string, lastname string, em
 	}
 
 	return s.platform.UpdateUser(user, domain.User{
-		Firstname: firstname,
-		Lastname:  lastname,
-		Emails:    e,
-		Roles:     r,
-		Password:  password,
+		Emails:   e,
+		Roles:    r,
+		Password: password,
 	})
 }
 

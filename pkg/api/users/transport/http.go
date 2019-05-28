@@ -119,11 +119,9 @@ func (t *transport) createUser(res http.ResponseWriter, req *http.Request) {
 // as parameters.
 func (t *transport) updateUser(res http.ResponseWriter, req *http.Request) {
 	type request struct {
-		Firstname string   `json:"firstname" validate:"omitempty,min=2,max=20"`
-		Lastname  string   `json:"lastname" validate:"omitempty,min=2,max=20"`
-		Emails    []string `json:"emails" validate:"omitempty,gte=1,dive,email"`
-		Roles     []string `json:"roles" validate:"omitempty,gte=1,dive,oneof=ROLE_USER ROLE_DEVELOPER ROLE_HR ROLE_MANAGER"`
-		Password  string   `json:"password" validate:"omitempty"`
+		Emails   []string `json:"emails" validate:"omitempty,gte=1,dive,email"`
+		Roles    []string `json:"roles" validate:"omitempty,gte=1,dive,oneof=ROLE_USER ROLE_DEVELOPER ROLE_HR ROLE_MANAGER"`
+		Password string   `json:"password" validate:"omitempty"`
 	}
 
 	data := request{}
@@ -145,7 +143,7 @@ func (t *transport) updateUser(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	result, err := t.service.UpdateUser(id, data.Firstname, data.Lastname, data.Emails, data.Roles, data.Password)
+	result, err := t.service.UpdateUser(id, data.Emails, data.Roles, data.Password)
 	if err == gorm.ErrRecordNotFound {
 		t.RespondError(res, "User not found", http.StatusNotFound)
 		return

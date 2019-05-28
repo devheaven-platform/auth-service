@@ -350,14 +350,6 @@ paths:
             schema:
               type: object
               properties:
-                firstname:
-                  type: string
-                  description: The firstname of the user
-                  example: "John"
-                lastname:
-                  type: string
-                  description: The lastname of the user
-                  example: "Doe"
                 emails:
                   type: array
                   description: A list containing the users emails
