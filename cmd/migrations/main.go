@@ -32,10 +32,9 @@ func main() {
 			{Email: "user@devheaven.nl"},
 		},
 		Roles: []domain.Role{
-			{Role: "USER"},
+			{Role: "ROLE_USER"},
 		},
 		Password: "Test1234",
-		Enabled:  true,
 	}
 
 	// Create developer
@@ -46,10 +45,9 @@ func main() {
 			{Email: "developer@devheaven.nl"},
 		},
 		Roles: []domain.Role{
-			{Role: "USER"},
+			{Role: "ROLE_DEVELOPER"},
 		},
 		Password: "Test1234",
-		Enabled:  true,
 	}
 
 	// Create hr
@@ -60,10 +58,9 @@ func main() {
 			{Email: "hr@devheaven.nl"},
 		},
 		Roles: []domain.Role{
-			{Role: "USER"},
+			{Role: "ROLE_HR"},
 		},
 		Password: "Test1234",
-		Enabled:  true,
 	}
 
 	// Create manager
@@ -74,10 +71,9 @@ func main() {
 			{Email: "manager@devheaven.nl"},
 		},
 		Roles: []domain.Role{
-			{Role: "USER"},
+			{Role: "ROLE_MANAGER"},
 		},
 		Password: "Test1234",
-		Enabled:  true,
 	}
 
 	db.Save(&user)

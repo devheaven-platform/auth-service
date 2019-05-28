@@ -8,6 +8,11 @@ info:
     email: devheavenplatform@gmail.com
     url: http://devheaven.nl/
 components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
   schemas:
     APIError:
       type: object
@@ -31,7 +36,7 @@ components:
         email:
           type: string
           description: The email value
-          example: "John"
+          example: "johndoe@email.com"
         createdAt:
           type: string
           description: The date a user was created on
@@ -46,7 +51,7 @@ components:
         role:
           type: string
           description: The role value
-          example: "John"
+          example: "ROLE_USER"
         createdAt:
           type: string
           description: The date a user was created on
@@ -80,10 +85,6 @@ components:
           description: A list containing the users roles
           items:
             $ref: '#/components/schemas/Role'
-        enabled:
-          type: bool
-          description: Whether the user is allowed to access to the system
-          example: true
         createdAt:
           type: string
           description: The date a user was created on
@@ -161,7 +162,7 @@ paths:
       summary: Information about the health of the service
       responses:
         '200':
-          description: No Content
+          description: OK
           content:
             application/json:
               schema:
@@ -190,6 +191,8 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '500':
           $ref: '#/components/responses/InternalServerError'
+      security:
+      - bearerAuth: []
       tags:
       - Auth
   /auth/login:
@@ -202,9 +205,18 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                email:
+                  type: string
+                  description: The email of the user
+                  example: user@devheaven.nl
+                password:
+                  type: string
+                  description: The password of the user
+                  example: Test1234
       responses:
         '200':
-          description: Created
+          description: OK
           content:
             application/json:
               schema:
@@ -232,6 +244,8 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '500':
           $ref: '#/components/responses/InternalServerError'
+      security:
+      - bearerAuth: []
       tags:
       - Users
     post:
@@ -243,6 +257,35 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                firstname:
+                  type: string
+                  description: The firstname of the user
+                  example: "John"
+                lastname:
+                  type: string
+                  description: The lastname of the user
+                  example: "Doe"
+                emails:
+                  type: array
+                  description: A list containing the users emails
+                  items:
+                    type: string
+                roles:
+                  type: array
+                  description: A list containing the users roles
+                  items:
+                    type: string
+                password:
+                  type: string
+                  description: The password of the user
+                  example: Test1234
+              required:
+              - firstname
+              - lastname
+              - emails
+              - roles
+              - password
       responses:
         '201':
           description: Created
@@ -256,6 +299,8 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '500':
           $ref: '#/components/responses/InternalServerError'
+      security:
+      - bearerAuth: []
       tags:
       - Users
   /users/{id}:
@@ -284,6 +329,8 @@ paths:
           $ref: '#/components/responses/NotFound'
         '500':
           $ref: '#/components/responses/InternalServerError'
+      security:
+      - bearerAuth: []
       tags:
       - Users
     patch:
@@ -302,6 +349,29 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                firstname:
+                  type: string
+                  description: The firstname of the user
+                  example: "John"
+                lastname:
+                  type: string
+                  description: The lastname of the user
+                  example: "Doe"
+                emails:
+                  type: array
+                  description: A list containing the users emails
+                  items:
+                    type: string
+                roles:
+                  type: array
+                  description: A list containing the users roles
+                  items:
+                    type: string
+                password:
+                  type: string
+                  description: The password of the user
+                  example: Test1234
       responses:
         '200':
           description: OK
@@ -317,6 +387,8 @@ paths:
           $ref: '#/components/responses/NotFound'
         '500':
           $ref: '#/components/responses/InternalServerError'
+      security:
+      - bearerAuth: []
       tags:
       - Users
     delete:
@@ -340,5 +412,7 @@ paths:
           $ref: '#/components/responses/NotFound'
         '500':
           $ref: '#/components/responses/InternalServerError'
+      security:
+      - bearerAuth: []
       tags:
       - Users

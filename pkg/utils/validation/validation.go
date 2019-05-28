@@ -35,20 +35,46 @@ func Validate(request interface{}) map[string]string {
 // readable form. It takes an instance of validator.FieldError
 // as parameter and returns an string as result.
 func formatMessage(err validator.FieldError) string {
+	field := strings.ToLower(err.StructField())
 	switch err.Tag() {
 	case "required":
-		return fmt.Sprintf("The %s field is required.", err.StructField())
+		return fmt.Sprintf("The %s field is required.", field)
 	case "min":
 		if err.Kind().String() == "string" {
-			return fmt.Sprintf("The %s field must be at least %s characters.", err.StructField(), err.Param())
+			return fmt.Sprintf("The %s field must be at least %s characters.", field, err.Param())
 		}
-		return fmt.Sprintf("The %s field must be at least %s.", err.StructField(), err.Param())
+		return fmt.Sprintf("The %s field must be at least %s.", field, err.Param())
 	case "max":
 		if err.Kind().String() == "string" {
-			return fmt.Sprintf("The %s field cannot be larger than %s characters.", err.StructField(), err.Param())
+			return fmt.Sprintf("The %s field cannot be larger than %s characters.", field, err.Param())
 		}
-		return fmt.Sprintf("The %s field cannot be larger than %s.", err.StructField(), err.Param())
+		return fmt.Sprintf("The %s field cannot be larger than %s.", field, err.Param())
+	case "gt":
+		if err.Kind().String() == "slice" {
+			return fmt.Sprintf("The %s field must contain more than %s element(s).", field, err.Param())
+		}
+		return fmt.Sprintf("The %s field must be greater than %s.", field, err.Param())
+	case "gte":
+		if err.Kind().String() == "slice" {
+			return fmt.Sprintf("The %s field must contain at least %s element(s).", field, err.Param())
+		}
+		return fmt.Sprintf("The %s field must be greater than or equal to %s.", field, err.Param())
+	case "lt":
+		if err.Kind().String() == "slice" {
+			return fmt.Sprintf("The %s field cannot contain more than %s element(s).", field, err.Param())
+		}
+		return fmt.Sprintf("The %s field must be less than %s.", field, err.Param())
+	case "lte":
+		if err.Kind().String() == "slice" {
+			return fmt.Sprintf("The %s field cannot contain more than %s element(s).", field, err.Param())
+		}
+		return fmt.Sprintf("The %s field must be less than or equal to %s.", field, err.Param())
+	case "email":
+		return fmt.Sprintf("The %s field must be valid email.", field)
+	case "oneof":
+		return fmt.Sprintf("The %s fiele must be one of %s", field, err.Param())
 	default:
-		return fmt.Sprintf("The %s field is invalid.", err.StructField())
+		fmt.Println(err.Tag())
+		return fmt.Sprintf("The %s field is invalid.", field)
 	}
 }
