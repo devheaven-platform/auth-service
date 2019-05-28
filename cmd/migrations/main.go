@@ -45,6 +45,7 @@ func main() {
 			{Email: "developer@devheaven.nl"},
 		},
 		Roles: []domain.Role{
+			{Role: "ROLE_USER"},
 			{Role: "ROLE_DEVELOPER"},
 		},
 		Password: "Test1234",
@@ -58,6 +59,7 @@ func main() {
 			{Email: "hr@devheaven.nl"},
 		},
 		Roles: []domain.Role{
+			{Role: "ROLE_USER"},
 			{Role: "ROLE_HR"},
 		},
 		Password: "Test1234",
@@ -71,6 +73,7 @@ func main() {
 			{Email: "manager@devheaven.nl"},
 		},
 		Roles: []domain.Role{
+			{Role: "ROLE_USER"},
 			{Role: "ROLE_MANAGER"},
 		},
 		Password: "Test1234",
