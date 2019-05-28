@@ -35,7 +35,7 @@ func CreateRouter(db *gorm.DB) chi.Router {
 
 	cors := cors.New(cors.Options{
 		AllowedOrigins: []string{"*"},
-		AllowedMethods: []string{"*"},
+		AllowedMethods: []string{"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"},
 		AllowedHeaders: []string{"*"},
 	})
 
