@@ -17,6 +17,7 @@ import (
 	"github.com/devheaven-platform/auth-service/pkg/utils/transport"
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
+	"github.com/go-chi/cors"
 	"github.com/go-chi/jwtauth"
 	"github.com/go-chi/render"
 	"github.com/jinzhu/gorm"
@@ -32,8 +33,15 @@ func CreateRouter(db *gorm.DB) chi.Router {
 
 	router := chi.NewRouter()
 
+	cors := cors.New(cors.Options{
+		AllowedOrigins: []string{"*"},
+		AllowedMethods: []string{"*"},
+		AllowedHeaders: []string{"*"},
+	})
+
 	router.Use(
 		render.SetContentType(render.ContentTypeJSON),
+		cors.Handler,
 		middleware.RealIP,
 		middleware.Recoverer,
 		logging.NewStructuredLogger(log.StandardLogger()),
