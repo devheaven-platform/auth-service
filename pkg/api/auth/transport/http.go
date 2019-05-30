@@ -118,6 +118,7 @@ func (t *transport) google(res http.ResponseWriter, req *http.Request) {
 
 	result, err := t.service.LoginGoogle(data.Email, data.Token)
 	if err != nil {
+		log.WithError(err).Warn("An error occurred while login in")
 		t.RespondError(res, "You are not unauthorized to access this system", http.StatusBadRequest)
 		return
 	}
