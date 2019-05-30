@@ -176,7 +176,7 @@ paths:
           $ref: '#/components/responses/InternalServerError'
       tags:
       - Health
-  /auth/me:
+  /auth/me/:
     get:
       operationId: Me
       summary: Current user
@@ -195,7 +195,7 @@ paths:
       - bearerAuth: []
       tags:
       - Auth
-  /auth/login:
+  /auth/login/:
     post:
       operationId: Login
       summary: Login
@@ -227,7 +227,7 @@ paths:
           $ref: '#/components/responses/InternalServerError'
       tags:
       - Auth
-  /auth/google:
+  /auth/google/:
     post:
       operationId: LoginGoogle
       summary: Login with Google
