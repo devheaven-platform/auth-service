@@ -36,6 +36,7 @@ func CreateTransport(service auth.Service) *chi.Mux {
 	})
 	router.Group(func(router chi.Router) {
 		router.Post("/login/", transport.login)
+		router.Post("/google/", transport.google)
 	})
 
 	return router
@@ -87,6 +88,37 @@ func (t *transport) login(res http.ResponseWriter, req *http.Request) {
 	if err != nil {
 		log.WithError(err).Warn("An error occurred while login in")
 		t.RespondError(res, "Invalid email or password", http.StatusBadRequest)
+		return
+	}
+
+	t.RespondJSON(res, http.StatusOK, result)
+}
+
+// google is used to log a user into the system via his google account.
+// This function listens on the /auth/google endpoint. It takes an
+// ResponseWriter and Request as parameters.
+func (t *transport) google(res http.ResponseWriter, req *http.Request) {
+	type request struct {
+		Email string `json:"email" validate:"required,email"`
+		Token string `json:"token" validate:"required"`
+	}
+
+	data := request{}
+	err := json.NewDecoder(req.Body).Decode(&data)
+	if err != nil {
+		t.RespondError(res, "An error occurred while converting the request body", http.StatusUnsupportedMediaType)
+		return
+	}
+
+	errs := validation.Validate(data)
+	if errs != nil {
+		t.RespondValidationError(res, "One or more values are invalid", http.StatusBadRequest, errs)
+		return
+	}
+
+	result, err := t.service.LoginGoogle(data.Email, data.Token)
+	if err != nil {
+		t.RespondError(res, "You are not unauthorized to access this system", http.StatusBadRequest)
 		return
 	}
 
