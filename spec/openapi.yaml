@@ -176,7 +176,7 @@ paths:
           $ref: '#/components/responses/InternalServerError'
       tags:
       - Health
-  /auth/me:
+  /auth/me/:
     get:
       operationId: Me
       summary: Current user
@@ -195,7 +195,7 @@ paths:
       - bearerAuth: []
       tags:
       - Auth
-  /auth/login:
+  /auth/login/:
     post:
       operationId: Login
       summary: Login
@@ -214,6 +214,38 @@ paths:
                   type: string
                   description: The password of the user
                   example: Test1234
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Token'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      tags:
+      - Auth
+  /auth/google/:
+    post:
+      operationId: LoginGoogle
+      summary: Login with Google
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  description: The email of the user
+                  example: user@devheaven.nl
+                token:
+                  type: string
+                  description: The google id token
+                  example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
       responses:
         '200':
           description: OK

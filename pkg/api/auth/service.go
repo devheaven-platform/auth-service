@@ -1,6 +1,8 @@
 package auth
 
 import (
+	"fmt"
+	"net/http"
 	"os"
 	"strconv"
 	"time"
@@ -56,12 +58,52 @@ func (s *Service) Login(email string, password string) (domain.Token, error) {
 	for _, role := range user.Roles {
 		r = append(r, role.Role)
 	}
+	result, err := s.GenerateToken(user.ID.String(), r)
+	if err != nil {
+		return domain.Token{}, err
+	}
+
+	return result, nil
+}
+
+// LoginGoogle is used to log user into the system.
+// via his Google account. It takes an email and
+// token as input if the credentials are valid an
+// token object will be returned.
+func (s *Service) LoginGoogle(email string, token string) (domain.Token, error) {
+	user, err := s.platform.GetByEmail(email)
+	if err != nil {
+		return domain.Token{}, err
+	}
+
+	res, err := http.Get(fmt.Sprintf("https://oauth2.googleapis.com/tokeninfo?id_token=%s", token))
+	if err != nil || res.StatusCode != http.StatusOK {
+		return domain.Token{}, err
+	}
+
+	r := []string{}
+	for _, role := range user.Roles {
+		r = append(r, role.Role)
+	}
+	result, err := s.GenerateToken(user.ID.String(), r)
+	if err != nil {
+		return domain.Token{}, err
+	}
+
+	return result, nil
+}
+
+// GenerateToken is used to generate a jwt token
+// for the system. It takes an id and roles as input
+// for the token claims and returns an token object and
+// error if one occurred.
+func (s *Service) GenerateToken(id string, roles []string) (domain.Token, error) {
 	iss := os.Getenv("JWT_ISSUER")
 	v, _ := strconv.Atoi(os.Getenv("JWT_EXPIRES"))
 	exp := time.Now().Add(time.Hour * time.Duration(v)).Unix()
 	iat := time.Now().Unix()
 
-	_, token, err := s.auth.Encode(jwtauth.Claims{"sub": user.ID.String(), "roles": r, "iss": iss, "exp": exp, "iat": iat})
+	_, token, err := s.auth.Encode(jwtauth.Claims{"sub": id, "roles": roles, "iss": iss, "exp": exp, "iat": iat})
 	if err != nil {
 		return domain.Token{}, err
 	}
