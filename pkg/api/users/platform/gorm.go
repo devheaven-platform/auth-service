@@ -1,8 +1,6 @@
 package platform
 
 import (
-	"fmt"
-
 	"github.com/devheaven-platform/auth-service/pkg/api/users"
 	"github.com/devheaven-platform/auth-service/pkg/domain"
 	"github.com/google/uuid"
@@ -62,12 +60,11 @@ func (p *platform) CreateUser(user domain.User) (domain.User, error) {
 // It takes an user and an user with updates as parameters
 // and returns an user and error if one occurred.
 func (p *platform) UpdateUser(user domain.User, update domain.User) (domain.User, error) {
-	fmt.Println(update)
 	if err := mergo.Merge(&update, user); err != nil {
 		return domain.User{}, err
 	}
 	update.ID = user.ID
-	fmt.Println(update)
+
 	if err := p.db.Save(&update).Error; err != nil {
 		return domain.User{}, err
 	}
