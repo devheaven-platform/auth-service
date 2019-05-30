@@ -71,6 +71,7 @@ func main() {
 		Lastname:  "",
 		Emails: []domain.Email{
 			{Email: "manager@devheaven.nl"},
+			{Email: "devheavenplatform@devheaven.nl"},
 		},
 		Roles: []domain.Role{
 			{Role: "ROLE_USER"},
