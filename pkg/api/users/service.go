@@ -75,17 +75,25 @@ func (s *Service) UpdateUser(id uuid.UUID, emails []string, roles []string, pass
 	}
 
 	e := []domain.Email{}
-	for _, email := range emails {
-		e = append(e, domain.Email{
-			Email: email,
-		})
+	if len(emails) > 0 {
+		for _, email := range emails {
+			e = append(e, domain.Email{
+				Email: email,
+			})
+		}
+	} else {
+		e = user.Emails
 	}
 
 	r := []domain.Role{}
-	for _, role := range roles {
-		r = append(r, domain.Role{
-			Role: role,
-		})
+	if len(roles) > 0 {
+		for _, role := range roles {
+			r = append(r, domain.Role{
+				Role: role,
+			})
+		}
+	} else {
+		r = user.Roles
 	}
 
 	return s.platform.UpdateUser(user, domain.User{
