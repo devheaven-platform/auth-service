@@ -1,9 +1,6 @@
 # Builder
 FROM golang:1.12.5 as builder
 
-# Install CA certificates
-RUN apk --no-cache add ca-certificates
-
 # Set working directory
 WORKDIR /app
 
