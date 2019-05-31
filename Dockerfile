@@ -1,6 +1,9 @@
 # Builder
 FROM golang:1.12.5 as builder
 
+# Install CA certificates
+RUN apk --no-cache add ca-certificates
+
 # Set working directory
 WORKDIR /app
 
@@ -24,6 +27,7 @@ FROM scratch
 WORKDIR /app/bin
 
 # Copy binary & swagger
+COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 COPY --from=builder /app/bin/auth-service /app/bin/auth-service
 COPY --from=builder /app/spec /app/bin/spec
 COPY --from=builder /app/dist /app/bin/dist
