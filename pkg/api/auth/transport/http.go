@@ -6,7 +6,7 @@ import (
 
 	"github.com/devheaven-platform/auth-service/pkg/api/auth"
 	"github.com/devheaven-platform/auth-service/pkg/utils/middleware"
-	base "github.com/devheaven-platform/auth-service/pkg/utils/transport"
+	"github.com/devheaven-platform/auth-service/pkg/utils/transport"
 	"github.com/devheaven-platform/auth-service/pkg/utils/validation"
 	"github.com/go-chi/chi"
 	"github.com/go-chi/jwtauth"
@@ -16,8 +16,8 @@ import (
 
 // This object is used to group all the transport
 // functions together.
-type transport struct {
-	base.BaseTransport
+type authTransport struct {
+	transport.BaseHTTPTransport
 	service auth.Service
 }
 
@@ -25,7 +25,7 @@ type transport struct {
 // layer. It takes an service as parameter and returns
 // an router object.
 func CreateTransport(service auth.Service) *chi.Mux {
-	transport := &transport{
+	transport := &authTransport{
 		service: service,
 	}
 
@@ -45,7 +45,7 @@ func CreateTransport(service auth.Service) *chi.Mux {
 // me is used to retrieve the current user. This function
 // listens on the /auth/me endpoint. It takes an ReponseWriter
 // and Request as parameters.
-func (t *transport) me(res http.ResponseWriter, req *http.Request) {
+func (t *authTransport) me(res http.ResponseWriter, req *http.Request) {
 	_, claims, _ := jwtauth.FromContext(req.Context())
 	id, err := uuid.Parse(claims["sub"].(string))
 	if err != nil {
@@ -65,7 +65,7 @@ func (t *transport) me(res http.ResponseWriter, req *http.Request) {
 // login is used to log a user into the system. This function
 // listens on the /auth/login endpoint. It takes an ResponseWriter
 // and Request as parameters.
-func (t *transport) login(res http.ResponseWriter, req *http.Request) {
+func (t *authTransport) login(res http.ResponseWriter, req *http.Request) {
 	type request struct {
 		Email    string `json:"email" validate:"required,email"`
 		Password string `json:"password" validate:"required"`
@@ -97,7 +97,7 @@ func (t *transport) login(res http.ResponseWriter, req *http.Request) {
 // google is used to log a user into the system via his google account.
 // This function listens on the /auth/google endpoint. It takes an
 // ResponseWriter and Request as parameters.
-func (t *transport) google(res http.ResponseWriter, req *http.Request) {
+func (t *authTransport) google(res http.ResponseWriter, req *http.Request) {
 	type request struct {
 		Email string `json:"email" validate:"required,email"`
 		Token string `json:"token" validate:"required"`

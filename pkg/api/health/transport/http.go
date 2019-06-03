@@ -10,7 +10,7 @@ import (
 
 // healthTransport represents a health transport object.
 type healthTransport struct {
-	transport.BaseTransport
+	transport.BaseHTTPTransport
 }
 
 // CreateTransport is used to create the health

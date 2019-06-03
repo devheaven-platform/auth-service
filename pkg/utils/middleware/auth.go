@@ -13,12 +13,12 @@ import (
 // error will be returned. Otherwise the next function
 // is called.
 func Authenticator(next http.Handler) http.Handler {
-	transport := transport.BaseTransport{}
+	t := transport.BaseHTTPTransport{}
 	return http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 		token, _, err := jwtauth.FromContext(req.Context())
 
 		if err != nil || token == nil || !token.Valid {
-			transport.RespondError(res, "Your not authorized to access this resource", http.StatusUnauthorized)
+			t.RespondError(res, "Your not authorized to access this resource", http.StatusUnauthorized)
 			return
 		}
 
