@@ -48,6 +48,7 @@ func CreateRouter(db *gorm.DB) chi.Router {
 		jwtauth.Verifier(auth),
 	)
 
+	// Routes
 	t := transport.BaseHTTPTransport{}
 	router.Route("/", func(r chi.Router) {
 		r.Mount("/health", healthTransport.CreateHTTPTransport())
@@ -63,6 +64,9 @@ func CreateRouter(db *gorm.DB) chi.Router {
 			t.RespondError(res, "Method not allowed", 405)
 		})
 	})
+
+	// Messaging
+	usersTransport.CreateKafkaTransport(usersService.CreateService(usersPlatform.CreatePlatform(db)))
 
 	return router
 }
