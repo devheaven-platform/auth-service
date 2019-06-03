@@ -23,7 +23,7 @@ func main() {
 
 	// Create models
 	db.DropTableIfExists(&domain.User{}, &domain.Email{}, &domain.Role{})
-	db.AutoMigrate(&domain.Email{}, &domain.Role{}, &domain.User{})
+	db.CreateTable(&domain.Email{}, &domain.Role{}, &domain.User{})
 
 	// Create user
 	id, _ := uuid.NewRandom()
@@ -81,8 +81,8 @@ func main() {
 		Password: "Test1234",
 	}
 
-	db.Save(&user)
-	db.Save(&developer)
-	db.Save(&hr)
-	db.Save(&manager)
+	db.Create(&user)
+	db.Create(&developer)
+	db.Create(&hr)
+	db.Create(&manager)
 }
