@@ -39,7 +39,6 @@ func (user *User) BeforeCreate(scope *gorm.Scope) error {
 // Scope as parameter and returns an error if one occurred.
 func (user *User) BeforeUpdate(scope *gorm.Scope) error {
 	hash, err := bcrypt.GenerateFromPassword([]byte(user.Password), 12)
-
 	if err != nil {
 		return err
 	}

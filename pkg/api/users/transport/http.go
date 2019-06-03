@@ -84,6 +84,7 @@ func (t *transport) getUserByID(res http.ResponseWriter, req *http.Request) {
 // parameters.
 func (t *transport) createUser(res http.ResponseWriter, req *http.Request) {
 	type request struct {
+		ID       string   `json:"id" validate:"required,uuid4"`
 		Emails   []string `json:"emails" validate:"required,gte=1,dive,email"`
 		Roles    []string `json:"roles" validate:"required,gte=1,dive,oneof=ROLE_USER ROLE_DEVELOPER ROLE_HR ROLE_MANAGER"`
 		Password string   `json:"password" validate:"required"`
@@ -102,7 +103,7 @@ func (t *transport) createUser(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	result, err := t.service.CreateUser(data.Emails, data.Roles, data.Password)
+	result, err := t.service.CreateUser(data.ID, data.Emails, data.Roles, data.Password)
 	if err != nil {
 		log.WithError(err).Warn("An error occurred while creating the user")
 		t.RespondError(res, "An internal server error occurred", http.StatusInternalServerError)

@@ -282,6 +282,10 @@ paths:
             schema:
               type: object
               properties:
+                id:
+                  type: string
+                  description: The id of the user
+                  example: "55417624-c159-4eab-9260-d4679a2e9b31"
                 emails:
                   type: array
                   description: A list containing the users emails
@@ -297,6 +301,7 @@ paths:
                   description: The password of the user
                   example: Test1234
               required:
+              - id
               - emails
               - roles
               - password
