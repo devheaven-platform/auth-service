@@ -6,9 +6,10 @@ import (
 	"github.com/go-chi/chi"
 )
 
-// CreateTransport is used to create the swagger
-// controller. It returns an instance of a chi.Mux router.
-func CreateTransport() *chi.Mux {
+// CreateHTTPTransport is used to create the swagger
+// transport layer. It returns an instance of a chi.Mux
+// router.
+func CreateHTTPTransport() *chi.Mux {
 	fs := http.FileServer(http.Dir("./dist"))
 
 	router := chi.NewRouter()
