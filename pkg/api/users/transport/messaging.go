@@ -1,6 +1,8 @@
 package transport
 
 import (
+	"context"
+
 	"github.com/devheaven-platform/auth-service/pkg/api/users"
 	"github.com/devheaven-platform/auth-service/pkg/utils/transport"
 	log "github.com/sirupsen/logrus"
@@ -19,10 +21,11 @@ func CreateKafkaTransport(service users.Service) {
 	transport := &kafkaTransport{
 		service: service,
 	}
+	ctx := context.Background()
 
-	transport.Listen("db.personnel.create-employee", transport.createUser)
-	transport.Listen("db.personnel.update-employee", transport.updateUser)
-	transport.Listen("db.personnel.delete-employee", transport.deleteUser)
+	transport.Listen(ctx, "db.personnel.create-employee", transport.createUser)
+	transport.Listen(ctx, "db.personnel.update-employee", transport.updateUser)
+	transport.Listen(ctx, "db.personnel.delete-employee", transport.deleteUser)
 }
 
 func (t *kafkaTransport) createUser(message interface{}) {

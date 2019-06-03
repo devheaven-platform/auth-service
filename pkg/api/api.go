@@ -66,7 +66,7 @@ func CreateRouter(db *gorm.DB) chi.Router {
 	})
 
 	// Messaging
-	usersTransport.CreateKafkaTransport(usersService.CreateService(usersPlatform.CreatePlatform(db)))
+	go usersTransport.CreateKafkaTransport(usersService.CreateService(usersPlatform.CreatePlatform(db)))
 
 	return router
 }

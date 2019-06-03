@@ -27,8 +27,6 @@ func main() {
 	}
 	defer db.Close()
 
-	// TODO: connect kafka
-
 	router := api.CreateRouter(db)
 
 	log.WithFields(log.Fields{
