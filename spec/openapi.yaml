@@ -67,14 +67,6 @@ components:
           type: string
           description: The id of the user
           example: "55417624-c159-4eab-9260-d4679a2e9b31"
-        firstname:
-          type: string
-          description: The firstname of the user
-          example: "John"
-        lastname:
-          type: string
-          description: The lastname of the user
-          example: "Doe"
         emails:
           type: array
           description: A list containing the users emails
@@ -290,14 +282,6 @@ paths:
             schema:
               type: object
               properties:
-                firstname:
-                  type: string
-                  description: The firstname of the user
-                  example: "John"
-                lastname:
-                  type: string
-                  description: The lastname of the user
-                  example: "Doe"
                 emails:
                   type: array
                   description: A list containing the users emails
@@ -313,8 +297,6 @@ paths:
                   description: The password of the user
                   example: Test1234
               required:
-              - firstname
-              - lastname
               - emails
               - roles
               - password

@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/devheaven-platform/auth-service/pkg/domain"
 	"github.com/devheaven-platform/auth-service/pkg/utils/db"
+	"github.com/google/uuid"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
 	_ "github.com/joho/godotenv/autoload"
@@ -25,9 +26,9 @@ func main() {
 	db.AutoMigrate(&domain.Email{}, &domain.Role{}, &domain.User{})
 
 	// Create user
+	id, _ := uuid.NewRandom()
 	user := domain.User{
-		Firstname: "User",
-		Lastname:  "",
+		ID: id,
 		Emails: []domain.Email{
 			{Email: "user@devheaven.nl"},
 		},
@@ -38,9 +39,9 @@ func main() {
 	}
 
 	// Create developer
+	id, _ = uuid.NewRandom()
 	developer := domain.User{
-		Firstname: "Developer",
-		Lastname:  "",
+		ID: id,
 		Emails: []domain.Email{
 			{Email: "developer@devheaven.nl"},
 		},
@@ -52,9 +53,9 @@ func main() {
 	}
 
 	// Create hr
+	id, _ = uuid.NewRandom()
 	hr := domain.User{
-		Firstname: "HR",
-		Lastname:  "",
+		ID: id,
 		Emails: []domain.Email{
 			{Email: "hr@devheaven.nl"},
 		},
@@ -66,9 +67,9 @@ func main() {
 	}
 
 	// Create manager
+	id, _ = uuid.NewRandom()
 	manager := domain.User{
-		Firstname: "Manager",
-		Lastname:  "",
+		ID: id,
 		Emails: []domain.Email{
 			{Email: "manager@devheaven.nl"},
 			{Email: "devheavenplatform@gmail.com"},

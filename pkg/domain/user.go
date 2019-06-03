@@ -9,14 +9,10 @@ import (
 )
 
 // User represents an user in the system. The object
-// contains some basic properties such as firstname,
-// lastname, password. It also contains
-// a list of emails that user has and an list of roles
-// the user has.
+// contains a list of emails that user has and an list
+// of roles the user has and the password of the user.
 type User struct {
 	ID        uuid.UUID `gorm:"type:uuid;primary_key;" json:"id"`
-	Firstname string    `json:"firstname"`
-	Lastname  string    `json:"lastname"`
 	Emails    []Email   `json:"emails"`
 	Roles     []Role    `gorm:"many2many:user_roles" json:"roles"`
 	Password  string    `json:"-"`
@@ -26,21 +22,15 @@ type User struct {
 
 // BeforeCreate is invoked by Gorm before an user is
 // inserted in the database. This function is used to
-// hash the passowrd of the user. It takes an gorm
+// hash the password of the user. It takes an gorm
 // Scope as parameter and returns an error if one occurred.
 func (user *User) BeforeCreate(scope *gorm.Scope) error {
-	uuid, err := uuid.NewRandom()
-	if err != nil {
-		return err
-	}
-
 	hash, err := bcrypt.GenerateFromPassword([]byte(user.Password), 12)
 	if err != nil {
 		return err
 	}
 
-	scope.SetColumn("Password", string(hash[:]))
-	return scope.SetColumn("ID", uuid)
+	return scope.SetColumn("Password", string(hash[:]))
 }
 
 // BeforeUpdate is invoked by Gorm before an user is
