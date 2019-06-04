@@ -20,7 +20,7 @@ func main() {
 	port := os.Getenv("GO_PORT")
 
 	db, err := db.OpenConnection()
-	db.LogMode(true)
+	db.LogMode(false)
 
 	if err != nil {
 		log.WithError(err).Fatal("An error occurred while connecting to the database")
