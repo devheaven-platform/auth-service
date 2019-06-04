@@ -4,7 +4,6 @@ import (
 	"github.com/devheaven-platform/auth-service/pkg/api/users"
 	"github.com/devheaven-platform/auth-service/pkg/domain"
 	"github.com/google/uuid"
-	"github.com/imdario/mergo"
 	"github.com/jinzhu/gorm"
 )
 
@@ -60,15 +59,24 @@ func (p *platform) CreateUser(user domain.User) (domain.User, error) {
 // It takes an user and an user with updates as parameters
 // and returns an user and error if one occurred.
 func (p *platform) UpdateUser(user domain.User, update domain.User) (domain.User, error) {
-	if err := mergo.Merge(&update, user); err != nil {
-		return domain.User{}, err
+	// Update password
+	if update.Password != "" {
+		if err := p.db.Model(&user).Update("password", update.Password).Error; err != nil {
+			return domain.User{}, err
+		}
 	}
-	update.ID = user.ID
 
-	if err := p.db.Save(&update).Error; err != nil {
+	// Update emails
+	if err := p.db.Model(&user).Association("emails").Replace(update.Emails).Error; err != nil {
 		return domain.User{}, err
 	}
-	return update, nil
+
+	// Updates roles
+	if err := p.db.Model(&user).Association("roles").Replace(update.Roles).Error; err != nil {
+		return domain.User{}, err
+	}
+
+	return user, nil
 }
 
 // DeleteUser is used to delete a user from the database.

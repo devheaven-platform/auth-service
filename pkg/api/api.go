@@ -48,19 +48,20 @@ func CreateRouter(db *gorm.DB) chi.Router {
 		jwtauth.Verifier(auth),
 	)
 
-	transport := transport.BaseTransport{}
+	// Routes
+	t := transport.BaseHTTPTransport{}
 	router.Route("/", func(r chi.Router) {
-		r.Mount("/health", healthTransport.CreateTransport())
-		r.Mount("/metrics", metricsTransport.CreateTransport())
-		r.Mount("/docs", swaggerTransport.CreateTransport())
-		r.Mount("/auth", authTransport.CreateTransport(authService.CreateService(authPlatform.CreatePlatform(db), auth)))
-		r.Mount("/users", usersTransport.CreateTransport(usersService.CreateService(usersPlatform.CreatePlatform(db))))
+		r.Mount("/health", healthTransport.CreateHTTPTransport())
+		r.Mount("/metrics", metricsTransport.CreateHTTPTransport())
+		r.Mount("/docs", swaggerTransport.CreateHTTPTransport())
+		r.Mount("/auth", authTransport.CreateHTTPTransport(authService.CreateService(authPlatform.CreatePlatform(db), auth)))
+		r.Mount("/users", usersTransport.CreateHTTPTransport(usersService.CreateService(usersPlatform.CreatePlatform(db))))
 
 		r.NotFound(func(res http.ResponseWriter, req *http.Request) {
-			transport.RespondError(res, "Resource not found", 404)
+			t.RespondError(res, "Resource not found", 404)
 		})
 		r.MethodNotAllowed(func(res http.ResponseWriter, req *http.Request) {
-			transport.RespondError(res, "Method not allowed", 405)
+			t.RespondError(res, "Method not allowed", 405)
 		})
 	})
 

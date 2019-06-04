@@ -7,14 +7,14 @@ import (
 	"github.com/devheaven-platform/auth-service/pkg/domain"
 )
 
-// BaseTransport represents a base transport object.
-type BaseTransport struct{}
+// BaseHTTPTransport represents a base http transport object.
+type BaseHTTPTransport struct{}
 
 // RespondJSON is used as a helper function to write an
 // go model to json and send it as response. It takes
 // an http.ResponseWriter, status code and model as
 // parameters.
-func (t BaseTransport) RespondJSON(res http.ResponseWriter, status int, payload interface{}) {
+func (t BaseHTTPTransport) RespondJSON(res http.ResponseWriter, status int, payload interface{}) {
 	response, err := json.Marshal(payload)
 	if err != nil {
 		res.WriteHeader(http.StatusInternalServerError)
@@ -29,7 +29,7 @@ func (t BaseTransport) RespondJSON(res http.ResponseWriter, status int, payload 
 // RespondError is used as a helper function to write
 // an error as api response. It takes an http.ResponseWriter,
 // message and status as parameters.
-func (t BaseTransport) RespondError(res http.ResponseWriter, message string, status int) {
+func (t BaseHTTPTransport) RespondError(res http.ResponseWriter, message string, status int) {
 	t.RespondJSON(res, status, domain.APIError{
 		Message: message,
 	})
@@ -39,7 +39,7 @@ func (t BaseTransport) RespondError(res http.ResponseWriter, message string, sta
 // to write an validation error as api response. It takes
 // an http.ResponseWriter, message, status and errors
 // map as parameters.
-func (t BaseTransport) RespondValidationError(res http.ResponseWriter, message string, status int, errors map[string]string) {
+func (t BaseHTTPTransport) RespondValidationError(res http.ResponseWriter, message string, status int, errors map[string]string) {
 	t.RespondJSON(res, status, domain.APIError{
 		Message: message,
 		Errors:  errors,

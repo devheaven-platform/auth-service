@@ -6,7 +6,7 @@ import (
 
 	"github.com/devheaven-platform/auth-service/pkg/api/users"
 	"github.com/devheaven-platform/auth-service/pkg/utils/middleware"
-	base "github.com/devheaven-platform/auth-service/pkg/utils/transport"
+	"github.com/devheaven-platform/auth-service/pkg/utils/transport"
 	"github.com/devheaven-platform/auth-service/pkg/utils/validation"
 	"github.com/go-chi/chi"
 	"github.com/google/uuid"
@@ -16,16 +16,16 @@ import (
 
 // This object is used to group all the transport
 // functions together.
-type transport struct {
-	base.BaseTransport
+type httpTransport struct {
+	transport.BaseHTTPTransport
 	service users.Service
 }
 
-// CreateTransport is used to intialize the transport
+// CreateHTTPTransport is used to intialize the transport
 // layer. It takes an service as parameter and returns
 // an router object.
-func CreateTransport(service users.Service) *chi.Mux {
-	transport := &transport{
+func CreateHTTPTransport(service users.Service) *chi.Mux {
+	transport := &httpTransport{
 		service: service,
 	}
 
@@ -45,7 +45,7 @@ func CreateTransport(service users.Service) *chi.Mux {
 // getAllUsers is used to retrieve all the users. This function
 // listens on the /users/ endpoint. It takes an ReponseWriter
 // and Request as parameters.
-func (t *transport) getAllUsers(res http.ResponseWriter, req *http.Request) {
+func (t *httpTransport) getAllUsers(res http.ResponseWriter, req *http.Request) {
 	result, err := t.service.GetAllUsers()
 	if err != nil {
 		log.WithError(err).Warn("An error occurred while retrieving the users")
@@ -59,7 +59,7 @@ func (t *transport) getAllUsers(res http.ResponseWriter, req *http.Request) {
 // getUserByID is used to retrieve one user. This function
 // listens on the /users/{id} endpoint. It takes an ReponseWriter
 // and Request as parameters.
-func (t *transport) getUserByID(res http.ResponseWriter, req *http.Request) {
+func (t *httpTransport) getUserByID(res http.ResponseWriter, req *http.Request) {
 	id, err := uuid.Parse(chi.URLParam(req, "id"))
 	if err != nil {
 		t.RespondError(res, "Id is invalid", http.StatusBadRequest)
@@ -82,13 +82,12 @@ func (t *transport) getUserByID(res http.ResponseWriter, req *http.Request) {
 // createUser is used to create a new user This function listens on
 // the /users/ endpoint. It takes an ReponseWriter and Request as
 // parameters.
-func (t *transport) createUser(res http.ResponseWriter, req *http.Request) {
+func (t *httpTransport) createUser(res http.ResponseWriter, req *http.Request) {
 	type request struct {
-		Firstname string   `json:"firstname" validate:"required,min=2,max=20"`
-		Lastname  string   `json:"lastname" validate:"required,min=2,max=20"`
-		Emails    []string `json:"emails" validate:"required,gte=1,dive,email"`
-		Roles     []string `json:"roles" validate:"required,gte=1,dive,oneof=ROLE_USER ROLE_DEVELOPER ROLE_HR ROLE_MANAGER"`
-		Password  string   `json:"password" validate:"required"`
+		ID       string   `json:"id" validate:"required,uuid4"`
+		Emails   []string `json:"emails" validate:"required,gte=1,dive,email"`
+		Roles    []string `json:"roles" validate:"required,gte=1,dive,oneof=ROLE_USER ROLE_DEVELOPER ROLE_HR ROLE_MANAGER"`
+		Password string   `json:"password" validate:"required"`
 	}
 
 	data := request{}
@@ -104,7 +103,7 @@ func (t *transport) createUser(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	result, err := t.service.CreateUser(data.Firstname, data.Lastname, data.Emails, data.Roles, data.Password)
+	result, err := t.service.CreateUser(data.ID, data.Emails, data.Roles, data.Password)
 	if err != nil {
 		log.WithError(err).Warn("An error occurred while creating the user")
 		t.RespondError(res, "An internal server error occurred", http.StatusInternalServerError)
@@ -117,7 +116,7 @@ func (t *transport) createUser(res http.ResponseWriter, req *http.Request) {
 // updateUser is used to update a user. This function listens on
 // the /users/{id} endpoint. It takes an ReponseWriter and Request
 // as parameters.
-func (t *transport) updateUser(res http.ResponseWriter, req *http.Request) {
+func (t *httpTransport) updateUser(res http.ResponseWriter, req *http.Request) {
 	type request struct {
 		Emails   []string `json:"emails" validate:"omitempty,gte=1,dive,email"`
 		Roles    []string `json:"roles" validate:"omitempty,gte=1,dive,oneof=ROLE_USER ROLE_DEVELOPER ROLE_HR ROLE_MANAGER"`
@@ -160,7 +159,7 @@ func (t *transport) updateUser(res http.ResponseWriter, req *http.Request) {
 // deleteUser is used to delete a user. This function listens on
 // the /users/{id} endpoint. It takes an ReponseWriter and Request
 // as parameters.
-func (t *transport) deleteUser(res http.ResponseWriter, req *http.Request) {
+func (t *httpTransport) deleteUser(res http.ResponseWriter, req *http.Request) {
 	id, err := uuid.Parse(chi.URLParam(req, "id"))
 	if err != nil {
 		t.RespondError(res, "Id is invalid", http.StatusBadRequest)

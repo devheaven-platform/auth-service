@@ -37,10 +37,15 @@ func (s *Service) GetUserByID(id uuid.UUID) (domain.User, error) {
 }
 
 // CreateUser is used to create a new user in the database.
-// It takes an firstname, lastname, slice of emails, slice
-// of roles and password as parameters and returns an user
-// and error if one occurred.
-func (s *Service) CreateUser(firstname string, lastname string, emails []string, roles []string, password string) (domain.User, error) {
+// It takes a id, an slice of emails, slice of roles and an
+// password as parameters and returns an user and error if
+// one occurred.
+func (s *Service) CreateUser(id string, emails []string, roles []string, password string) (domain.User, error) {
+	i, err := uuid.Parse(id)
+	if err != nil {
+		return domain.User{}, err
+	}
+
 	e := []domain.Email{}
 	for _, email := range emails {
 		e = append(e, domain.Email{
@@ -56,11 +61,10 @@ func (s *Service) CreateUser(firstname string, lastname string, emails []string,
 	}
 
 	return s.platform.CreateUser(domain.User{
-		Firstname: firstname,
-		Lastname:  lastname,
-		Emails:    e,
-		Roles:     r,
-		Password:  password,
+		ID:       i,
+		Emails:   e,
+		Roles:    r,
+		Password: password,
 	})
 }
 
