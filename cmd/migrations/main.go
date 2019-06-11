@@ -26,7 +26,7 @@ func main() {
 	db.CreateTable(&domain.Email{}, &domain.Role{}, &domain.User{})
 
 	// Create user
-	id, _ := uuid.NewRandom()
+	id, _ := uuid.Parse("8c5df3bc-9fa6-4d73-b79a-9a1cbb35740c")
 	user := domain.User{
 		ID: id,
 		Emails: []domain.Email{
@@ -39,7 +39,7 @@ func main() {
 	}
 
 	// Create developer
-	id, _ = uuid.NewRandom()
+	id, _ = uuid.Parse("b0203081-5dfe-4bb7-87d1-e2c59e2af7b6")
 	developer := domain.User{
 		ID: id,
 		Emails: []domain.Email{
@@ -53,7 +53,7 @@ func main() {
 	}
 
 	// Create hr
-	id, _ = uuid.NewRandom()
+	id, _ = uuid.Parse("6b59c645-82c3-4e08-b089-f4236a2141b6")
 	hr := domain.User{
 		ID: id,
 		Emails: []domain.Email{
@@ -67,7 +67,7 @@ func main() {
 	}
 
 	// Create manager
-	id, _ = uuid.NewRandom()
+	id, _ = uuid.Parse("75129bb5-5c12-48a1-8410-bb2630fff9ed")
 	manager := domain.User{
 		ID: id,
 		Emails: []domain.Email{
